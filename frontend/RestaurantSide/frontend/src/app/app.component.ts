@@ -7,10 +7,6 @@ import type { UserResponse } from './models/user/user-response.model';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { LoginComponent } from './components/auth/login/login.component';
 import { AiAssistantComponent } from './components/ai-assistant/ai-assistant.component';
-// ProfileSettingsService is not directly used for the image URL logic anymore
-// since that logic is duplicated in getProfileImageUrl() for consistency and simplicity.
-// Remove if not used elsewhere in this component.
-// import { ProfileSettingsService } from './services/profile-settings.service';
 
 interface NavigationItem {
   id: string;
@@ -20,16 +16,12 @@ interface NavigationItem {
   route: string;
 }
 
-// Re-using the Notification interface from ProfileSettingsComponent's pattern
-// as it correctly includes the 'type' property used in HTML for styling.
 interface Notification {
   id: number;
   message: string;
-  // NOTE: This 'type' property is added based on observation from profile-settings.component.html
-  // and is crucial for the notification styling you already have.
   type: 'success' | 'error' | 'warning' | 'info';
-  timestamp?: Date; // Original app.component.ts had timestamp, profile-settings.component.ts did not for its notification interface
-  read?: boolean; // Original app.component.ts had read, profile-settings.component.ts did not for its notification interface
+  timestamp?: Date;
+  read?: boolean;
 }
 
 @Component({
@@ -39,7 +31,6 @@ interface Notification {
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  // Backend server URL - Consistent with ProfileSettingsComponent's approach
   private serverUrl = 'http://localhost:8082';
 
   // Authentication state
@@ -50,9 +41,9 @@ export class AppComponent implements OnInit {
   // UI state
   currentView = 'dashboard';
   isDarkMode = false;
-  showNotifications = false; // Original property
+  showNotifications = false;
 
-  // Navigation items with routes
+  // Navigation items with routes - Updated to include Orders
   navigationItems: NavigationItem[] = [
     {
       id: 'dashboard',
@@ -67,6 +58,13 @@ export class AppComponent implements OnInit {
       icon: 'fas fa-utensils',
       roles: ['ADMIN', 'EMPLOYEE'],
       route: '/products',
+    },
+    {
+      id: 'orders',
+      label: 'Orders',
+      icon: 'fas fa-shopping-cart',
+      roles: ['ADMIN', 'EMPLOYEE'],
+      route: '/orders',
     },
     {
       id: 'reservations',
@@ -92,34 +90,34 @@ export class AppComponent implements OnInit {
     {
       id: 'profile',
       label: 'Profile',
-      icon: 'fas fa-user', // This will be replaced by the image in HTML
+      icon: 'fas fa-user',
       roles: ['ADMIN', 'EMPLOYEE'],
       route: '/profile',
     },
   ];
 
-  // Notifications (Adjusted to match your existing HTML and ProfileSettings component's notification 'type')
+  // Notifications
   notifications: Notification[] = [
     {
       id: 1,
       message: 'Low stock alert: Tomatoes',
       timestamp: new Date(Date.now() - 2 * 60 * 1000),
       read: false,
-      type: 'warning', // Added type for consistent styling with HTML
+      type: 'warning',
     },
     {
       id: 2,
       message: 'New reservation from John Smith',
       timestamp: new Date(Date.now() - 15 * 60 * 1000),
       read: false,
-      type: 'info', // Added type for consistent styling with HTML
+      type: 'info',
     },
     {
       id: 3,
       message: 'Daily report is ready',
       timestamp: new Date(Date.now() - 60 * 60 * 1000),
       read: true,
-      type: 'success', // Added type for consistent styling with HTML
+      type: 'success',
     },
   ];
 
@@ -127,7 +125,6 @@ export class AppComponent implements OnInit {
   private authService = inject(AuthService);
   private loginService = inject(LoginService);
   private router = inject(Router);
-  // private profileSettingsService = inject(ProfileSettingsService); // No longer strictly needed for this specific task
 
   private isBrowser = false;
 
@@ -139,12 +136,10 @@ export class AppComponent implements OnInit {
     // Subscribe to authentication state
     this.authService.isLoggedIn$.subscribe((isLoggedIn) => {
       this.isLoggedIn = isLoggedIn;
-      // When logged in, also subscribe to currentUser changes and get the role
       if (isLoggedIn) {
         this.authService.currentUser$.subscribe((user) => {
           this.currentUser = user;
         });
-        // Correctly get the user role using the existing method from AuthService
         this.userRole = this.authService.getCurrentUserRole();
       } else {
         this.currentUser = null;
@@ -185,7 +180,7 @@ export class AppComponent implements OnInit {
     if (navItem) {
       this.router.navigateByUrl(navItem.route);
     }
-    this.showNotifications = false; // Keep existing behavior
+    this.showNotifications = false;
   }
 
   // Authentication methods
@@ -194,7 +189,7 @@ export class AppComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  // Theme methods (Restored to original presence)
+  // Theme methods
   toggleTheme(): void {
     this.isDarkMode = !this.isDarkMode;
     this.applyTheme();
@@ -225,12 +220,11 @@ export class AppComponent implements OnInit {
     }
   }
 
-  // Notification methods (Restored to original presence)
+  // Notification methods
   toggleNotifications(): void {
     this.showNotifications = !this.showNotifications;
   }
 
-  // NOTE: This method was present in your previous App.component.ts and used in its HTML snippet for notifications.
   removeNotification(id: number): void {
     this.notifications = this.notifications.filter(
       (notification) => notification.id !== id
@@ -238,21 +232,15 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Constructs the full, absolute URL for the profile image, consistent with ProfileSettingsComponent.
-   * It prepends the backend server address to the relative path stored in the database.
-   * @returns The absolute URL to the profile image or a placeholder.
+   * Constructs the full, absolute URL for the profile image
    */
   getProfileImageUrl(): string {
     if (this.currentUser?.profileImageUrl) {
-      // If the URL is already absolute (e.g., from a CDN), use it directly.
       if (this.currentUser.profileImageUrl.startsWith('http')) {
         return this.currentUser.profileImageUrl;
       }
-      // Otherwise, prepend the backend server URL to the relative path.
       return `${this.serverUrl}${this.currentUser.profileImageUrl}`;
     }
-    // Return a modern placeholder if no image URL is available.
-    // Placeholder size is adjusted for sidebar icon.
     return 'https://placehold.co/32x32/EBF4FF/76A9FA?text=No+Image';
   }
 }

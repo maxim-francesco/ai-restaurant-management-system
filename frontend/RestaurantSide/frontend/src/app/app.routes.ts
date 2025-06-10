@@ -7,6 +7,7 @@ import { AuthGuard } from './services/auth-guard.service';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ReportsComponent } from './components/reports/reports.component';
 import { ActivityLogsComponent } from './components/activity-logs/activity-logs.component';
+import { OrderManagementComponent } from './components/order-management/order-management.component';
 
 export const routes: Routes = [
   {
@@ -27,6 +28,11 @@ export const routes: Routes = [
   {
     path: 'products',
     component: ProductManagementComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'orders',
+    component: OrderManagementComponent,
     canActivate: [AuthGuard],
   },
   {
