@@ -1,5 +1,10 @@
-import { Component, type OnInit } from '@angular/core';
+import { Component, inject, type OnInit, type OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import type { Subscription } from 'rxjs';
+import {
+  DashboardService,
+  type DashboardMetrics,
+} from '../../services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,133 +13,129 @@ import { CommonModule } from '@angular/common';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
-export class DashboardComponent implements OnInit {
-  stats = [
-    {
-      title: 'Total Orders Today',
-      value: '23',
-      icon: 'fas fa-shopping-cart',
-      color: 'blue',
-      change: '+12%',
-      changeType: 'increase',
-    },
-    {
-      title: 'Total Revenue',
-      value: '$1,247.50',
-      icon: 'fas fa-dollar-sign',
-      color: 'green',
-      change: '+8.5%',
-      changeType: 'increase',
-    },
-    {
-      title: 'Active Tables',
-      value: '8',
-      icon: 'fas fa-chair',
-      color: 'purple',
-      change: '2 available',
-      changeType: 'neutral',
-    },
-    {
-      title: 'Pending Orders',
-      value: '5',
-      icon: 'fas fa-clock',
-      color: 'orange',
-      change: '-3 from yesterday',
-      changeType: 'decrease',
-    },
-  ];
+export class DashboardComponent implements OnInit, OnDestroy {
+  metrics: DashboardMetrics | null = null;
+  isLoading = true;
+  lastUpdated: Date | null = null;
+  private subscription?: Subscription;
 
-  topItems = [
-    { name: 'Margherita Pizza', sales: 12, revenue: '$180.00' },
-    { name: 'Caesar Salad', sales: 8, revenue: '$96.00' },
-    { name: 'Grilled Salmon', sales: 6, revenue: '$144.00' },
-    { name: 'Pasta Carbonara', sales: 5, revenue: '$75.00' },
-    { name: 'Chocolate Cake', sales: 4, revenue: '$32.00' },
-  ];
-
-  recentActivities = [
-    {
-      id: 1,
-      action: 'New order received',
-      details: 'Table 5 - Margherita Pizza x2',
-      timestamp: '2 minutes ago',
-      icon: 'fas fa-plus-circle',
-      color: 'green',
-    },
-    {
-      id: 2,
-      action: 'Order completed',
-      details: 'Table 3 - Caesar Salad',
-      timestamp: '5 minutes ago',
-      icon: 'fas fa-check-circle',
-      color: 'blue',
-    },
-    {
-      id: 3,
-      action: 'Reservation confirmed',
-      details: 'John Smith - 4 guests at 7:00 PM',
-      timestamp: '10 minutes ago',
-      icon: 'fas fa-calendar-check',
-      color: 'purple',
-    },
-    {
-      id: 4,
-      action: 'Low stock alert',
-      details: 'Tomatoes - Only 5 units left',
-      timestamp: '15 minutes ago',
-      icon: 'fas fa-exclamation-triangle',
-      color: 'orange',
-    },
-  ];
+  private dashboardService = inject(DashboardService);
 
   ngOnInit(): void {
-    // Simulate real-time updates
-    this.startRealTimeUpdates();
+    this.subscription = this.dashboardService.metrics$.subscribe({
+      next: (metrics) => {
+        this.metrics = metrics;
+        this.isLoading = false;
+        this.lastUpdated = new Date();
+      },
+      error: (error) => {
+        console.error('Dashboard metrics error:', error);
+        this.isLoading = false;
+      },
+    });
   }
 
-  private startRealTimeUpdates(): void {
-    // Simulate periodic updates to dashboard data
-    setInterval(() => {
-      this.updateStats();
-    }, 30000); // Update every 30 seconds
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
   }
 
-  private updateStats(): void {
-    // Simulate random updates to stats
-    const randomIndex = Math.floor(Math.random() * this.stats.length);
-    const stat = this.stats[randomIndex];
+  refreshData(): void {
+    this.isLoading = true;
+    this.dashboardService.refreshData().subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.lastUpdated = new Date();
+      },
+      error: (error) => {
+        console.error('Manual refresh error:', error);
+        this.isLoading = false;
+      },
+    });
+  }
 
-    if (stat.title === 'Total Orders Today') {
-      const currentValue = Number.parseInt(stat.value);
-      stat.value = (currentValue + Math.floor(Math.random() * 3)).toString();
-    } else if (stat.title === 'Total Revenue') {
-      const currentValue = Number.parseFloat(
-        stat.value.replace('$', '').replace(',', '')
-      );
-      const newValue = currentValue + Math.random() * 50;
-      stat.value = `$${newValue.toFixed(2)}`;
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(amount);
+  }
+
+  formatPercentage(value: number): string {
+    return `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`;
+  }
+
+  formatTime(date: Date): string {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString([], {
+      month: 'short',
+      day: 'numeric',
+    });
+  }
+
+  getChangeIcon(value: number): string {
+    if (value > 0) return 'fas fa-arrow-up';
+    if (value < 0) return 'fas fa-arrow-down';
+    return 'fas fa-minus';
+  }
+
+  getChangeColor(value: number): string {
+    if (value > 0) return 'text-green-600 dark:text-green-400';
+    if (value < 0) return 'text-red-600 dark:text-red-400';
+    return 'text-gray-600 dark:text-gray-400';
+  }
+
+  getMaxValue(data: any[], key: string): number {
+    return Math.max(...data.map((item) => item[key]));
+  }
+
+  getBarHeight(value: number, maxValue: number): number {
+    return maxValue > 0 ? (value / maxValue) * 100 : 0;
+  }
+
+  getRevenueBarHeight(revenue: number): number {
+    if (!this.metrics?.dailyRevenueData) return 0;
+    const maxRevenue = this.getMaxValue(
+      this.metrics.dailyRevenueData,
+      'revenue'
+    );
+    return this.getBarHeight(revenue, maxRevenue);
+  }
+
+  getOrderBarHeight(orders: number): number {
+    if (!this.metrics?.hourlyOrderData) return 0;
+    const maxOrders = this.getMaxValue(this.metrics.hourlyOrderData, 'orders');
+    return this.getBarHeight(orders, maxOrders);
+  }
+
+  getTotalRevenue(): number {
+    if (!this.metrics?.dailyRevenueData) return 0;
+    return this.metrics.dailyRevenueData.reduce(
+      (sum, day) => sum + day.revenue,
+      0
+    );
+  }
+
+  getTotalDailyOrders(): number {
+    if (!this.metrics?.hourlyOrderData) return 0;
+    return this.metrics.hourlyOrderData.reduce(
+      (sum, hour) => sum + hour.orders,
+      0
+    );
+  }
+
+  getPeakHourInfo(): string {
+    if (!this.metrics?.peakHours || this.metrics.peakHours.length === 0) {
+      return 'N/A';
     }
+    const peak = this.metrics.peakHours[0];
+    return `${peak.hour} (${peak.orderCount} orders)`;
   }
 
-  getChangeIcon(changeType: string): string {
-    switch (changeType) {
-      case 'increase':
-        return 'fas fa-arrow-up';
-      case 'decrease':
-        return 'fas fa-arrow-down';
-      default:
-        return 'fas fa-minus';
-    }
-  }
-
-  getChangeColor(changeType: string): string {
-    switch (changeType) {
-      case 'increase':
-        return 'text-green-600';
-      case 'decrease':
-        return 'text-red-600';
-      default:
-        return 'text-gray-600';
-    }
+  formatOrderTime(orderDate: string | undefined): string {
+    if (!orderDate) return 'N/A';
+    return this.formatTime(new Date(orderDate));
   }
 }
