@@ -1,9 +1,6 @@
 package com.example.AuthenticationManagement.controller;
 
-import com.example.AuthenticationManagement.dto.LoginRequestDTO;
-import com.example.AuthenticationManagement.dto.LoginResponseDTO;
-import com.example.AuthenticationManagement.dto.UserRequestDTO;
-import com.example.AuthenticationManagement.dto.UserResponseDTO;
+import com.example.AuthenticationManagement.dto.*;
 import com.example.AuthenticationManagement.model.User;
 import com.example.AuthenticationManagement.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -16,9 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -75,16 +70,24 @@ public class UserController {
     }
 
     @PostMapping("/{id}/upload-image")
-    public ResponseEntity<String> uploadProfileImage(
+    public ResponseEntity<Map<String, String>> uploadProfileImage(
             @PathVariable Long id,
             @RequestParam("file") MultipartFile file) {
         try {
             String fileName = userService.storeProfileImage(id, file);
-            return ResponseEntity.ok("Image uploaded successfully: " + fileName);
+            String imageUrl = "http://localhost:8082/images/" + fileName;
+
+            Map<String, String> response = new HashMap<>();
+            response.put("imageUrl", imageUrl);
+
+            return ResponseEntity.ok(response);
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Image upload failed");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Image upload failed"));
         }
     }
+
+
 
 
 

@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    // Define the upload directory as a constant for consistency.
+    private final Path rootLocation = Paths.get("uploads");
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -81,23 +83,38 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
 
+    /**
+     * Stores the profile image, saves it to the filesystem, and updates the user's profile URL.
+     *
+     * @param userId The ID of the user.
+     * @param file The image file to be uploaded.
+     * @return The unique filename of the stored image.
+     * @throws IOException If an I/O error occurs.
+     */
     @Override
     public String storeProfileImage(Long userId, MultipartFile file) throws IOException {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
 
-        String uploadDir = "uploads/";
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path filePath = Paths.get(uploadDir + fileName);
+        // Generate a unique filename to prevent conflicts.
+        String originalFilename = file.getOriginalFilename() != null ? file.getOriginalFilename() : "file";
+        String fileName = UUID.randomUUID() + "_" + originalFilename;
 
-        Files.createDirectories(filePath.getParent());
-        Files.write(filePath, file.getBytes());
+        // Ensure the upload directory exists.
+        if (Files.notExists(rootLocation)) {
+            Files.createDirectories(rootLocation);
+        }
 
-        user.setProfileImageUrl("/" + filePath.toString().replace("\\", "/"));
+        // Resolve the full path and save the file.
+        Path destinationFile = this.rootLocation.resolve(Paths.get(fileName)).normalize().toAbsolutePath();
+        Files.copy(file.getInputStream(), destinationFile);
+
+        // *** FIX: Construct the correct URL path that matches the WebConfig resource handler. ***
+        // The URL should start with "/images/" to be correctly served.
+        String imageUrl = "/images/" + fileName;
+        user.setProfileImageUrl(imageUrl);
         userRepository.save(user);
 
         return fileName;
     }
-
-
 }
