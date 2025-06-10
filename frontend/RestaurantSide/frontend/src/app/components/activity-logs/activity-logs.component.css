@@ -1,0 +1,87 @@
+/* Activity logs specific styles */
+.activity-timeline {
+  position: relative;
+}
+
+.activity-item {
+  @apply flex items-start space-x-4 p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow duration-200;
+}
+
+.activity-icon {
+  @apply flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center;
+}
+
+.activity-content {
+  @apply flex-1 min-w-0;
+}
+
+/* Color variations for activity types */
+.activity-green {
+  @apply bg-green-100 text-green-600;
+}
+
+.activity-blue {
+  @apply bg-blue-100 text-blue-600;
+}
+
+.activity-purple {
+  @apply bg-purple-100 text-purple-600;
+}
+
+.activity-red {
+  @apply bg-red-100 text-red-600;
+}
+
+.activity-orange {
+  @apply bg-orange-100 text-orange-600;
+}
+
+/* Dark mode support */
+.dark .activity-green {
+  @apply bg-green-900 text-green-400;
+}
+
+.dark .activity-blue {
+  @apply bg-blue-900 text-blue-400;
+}
+
+.dark .activity-purple {
+  @apply bg-purple-900 text-purple-400;
+}
+
+.dark .activity-red {
+  @apply bg-red-900 text-red-400;
+}
+
+.dark .activity-orange {
+  @apply bg-orange-900 text-orange-400;
+}
+
+/* Filter section */
+.filter-section {
+  @apply bg-white rounded-lg shadow-md p-6 mb-6;
+}
+
+.dark .filter-section {
+  @apply bg-gray-800;
+}
+
+/* Export buttons */
+.export-button {
+  @apply bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors duration-200;
+}
+
+.clear-button {
+  @apply bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors duration-200;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .activity-item {
+    @apply flex-col space-x-0 space-y-3;
+  }
+
+  .filter-section {
+    @apply p-4;
+  }
+}

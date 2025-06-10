@@ -1,0 +1,31 @@
+/* Menu item hover effects */
+.menu-item-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.menu-item-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Filter button animations */
+.filter-button {
+  transition: all 0.3s ease;
+}
+
+.filter-button:hover {
+  transform: scale(1.05);
+}
+
+/* Dietary tags */
+.dietary-tag {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

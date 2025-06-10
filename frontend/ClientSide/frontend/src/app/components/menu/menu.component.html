@@ -1,0 +1,119 @@
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        Our Menu
+      </h1>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        Discover our carefully crafted dishes made with the finest ingredients
+      </p>
+    </div>
+
+    <!-- Filters -->
+    <div class="mb-8 space-y-4">
+      <!-- Category Filter -->
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3">Categories</h3>
+        <div class="flex flex-wrap gap-2">
+          <button
+            *ngFor="let category of categories"
+            (click)="selectCategory(category.id)"
+            [class]="
+              selectedCategory === category.id
+                ? 'bg-amber-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            "
+            class="px-4 py-2 rounded-full text-sm font-medium transition-colors"
+          >
+            {{ category.name }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Dietary Filter -->
+      <div class="bg-white rounded-lg shadow-md p-4">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3">
+          Dietary Preferences
+        </h3>
+        <div class="flex flex-wrap gap-2">
+          <button
+            *ngFor="let filter of dietaryFilters"
+            (click)="selectDietaryFilter(filter.id)"
+            [class]="
+              selectedDietaryFilter === filter.id
+                ? 'bg-green-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            "
+            class="px-4 py-2 rounded-full text-sm font-medium transition-colors"
+          >
+            {{ filter.name }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu Items Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+        *ngFor="let item of filteredItems"
+        class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden"
+      >
+        <div class="relative">
+          <img
+            [src]="item.image"
+            [alt]="item.name"
+            class="w-full h-48 object-cover"
+          />
+          <div class="absolute top-2 right-2">
+            <span
+              *ngFor="let dietary of item.dietary"
+              class="inline-block bg-green-500 text-white text-xs px-2 py-1 rounded-full mr-1"
+            >
+              {{ dietary }}
+            </span>
+          </div>
+        </div>
+
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="text-xl font-bold text-gray-900">{{ item.name }}</h3>
+            <span class="text-xl font-bold text-amber-600"
+              >${{ item.price }}</span
+            >
+          </div>
+
+          <p class="text-gray-600 mb-4">{{ item.description }}</p>
+
+          <div class="flex justify-between items-center">
+            <div class="text-sm text-gray-500">
+              <span *ngIf="item.allergens.length > 0">
+                Allergens: {{ item.allergens.join(", ") }}
+              </span>
+            </div>
+            <button
+              (click)="openModal(item)"
+              class="bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+            >
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Results Message -->
+    <div *ngIf="filteredItems.length === 0" class="text-center py-12">
+      <p class="text-xl text-gray-600">No items found matching your filters.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Product Details Modal -->
+<app-product-details-modal
+  *ngIf="isModalOpen && selectedItem"
+  [item]="selectedItem"
+  [isOpen]="isModalOpen"
+  (close)="closeModal()"
+>
+</app-product-details-modal>
