@@ -1,0 +1,156 @@
+<div
+  class="p-4 sm:p-6 lg:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen font-sans"
+>
+  <header
+    class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+  >
+    <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">
+      Dashboard Analitic
+    </h1>
+    <button
+      (click)="loadData()"
+      [disabled]="isLoading"
+      class="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg transition-colors duration-200 flex items-center shadow-sm"
+    >
+      <i
+        [class]="isLoading ? 'fas fa-spinner fa-spin' : 'fas fa-sync-alt'"
+        class="mr-2"
+      ></i>
+      {{ isLoading ? "Actualizez..." : "Reîmprospătează" }}
+    </button>
+  </header>
+
+  <div *ngIf="isLoading" class="text-center py-20">
+    <i class="fas fa-spinner fa-spin text-4xl text-blue-500"></i>
+    <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
+      Se încarcă datele...
+    </p>
+  </div>
+
+  <div
+    *ngIf="error && !isLoading"
+    class="text-center py-20 bg-red-50 dark:bg-red-900/20 p-6 rounded-lg"
+  >
+    <i class="fas fa-exclamation-triangle text-4xl text-red-500"></i>
+    <p class="mt-4 text-lg text-red-700 dark:text-red-300">{{ error }}</p>
+  </div>
+
+  <main *ngIf="data && !isLoading" class="space-y-8 animate-fade-in">
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div
+        *ngFor="let kpi of kpiCards"
+        class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md flex items-center gap-5 transition-all duration-300 hover:shadow-lg hover:scale-105"
+      >
+        <div
+          class="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center"
+          [ngClass]="kpi.color.replace('text-', 'bg-') + '/10'"
+        >
+          <i class="fas text-xl" [ngClass]="[kpi.icon, kpi.color]"></i>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+            {{ kpi.title }}
+          </p>
+          <p class="text-2xl font-bold text-gray-800 dark:text-white">
+            {{ kpi.value }}
+          </p>
+          <div
+            *ngIf="kpi.growth !== undefined"
+            class="flex items-center text-xs mt-1"
+            [ngClass]="
+              kpi.growth >= 0
+                ? 'text-green-600 dark:text-green-400'
+                : 'text-red-600 dark:text-red-400'
+            "
+          >
+            <i
+              class="fas text-xs"
+              [ngClass]="kpi.growth >= 0 ? 'fa-arrow-up' : 'fa-arrow-down'"
+            ></i>
+            <span class="font-semibold ml-1">{{ kpi.growth.toFixed(1) }}%</span>
+            <span class="ml-1 text-gray-400 dark:text-gray-500">vs. ieri</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div
+        class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md lg:col-span-2"
+      >
+        <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">
+          Venituri Zilnice (ultimele 7 zile)
+        </h3>
+        <div class="h-80"><canvas #revenueChart></canvas></div>
+      </div>
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+        <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">
+          Vânzări pe Categorie
+        </h3>
+        <div class="h-80"><canvas #categoryChart></canvas></div>
+      </div>
+    </section>
+
+    <section class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+      <div
+        class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md xl:col-span-1"
+      >
+        <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">
+          Top 5 Produse (după Venit)
+        </h3>
+        <ul class="space-y-3">
+          <li
+            *ngFor="let p of data.tables.topProducts"
+            class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
+          >
+            <div>
+              <p class="font-semibold text-gray-800 dark:text-gray-100">
+                {{ p.name }}
+              </p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                {{ p.totalSold }} vândute
+              </p>
+            </div>
+            <p class="font-bold text-gray-900 dark:text-white">
+              {{ p.totalRevenue | currency : "RON" : "symbol" : "1.2-2" }}
+            </p>
+          </li>
+        </ul>
+      </div>
+
+      <div
+        class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md xl:col-span-2"
+      >
+        <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">
+          Activitate Recentă în Sistem
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-left">
+            <tbody>
+              <tr
+                *ngFor="let log of data.tables.recentLogs"
+                class="border-b border-gray-200 dark:border-gray-700 last:border-b-0"
+              >
+                <td class="py-3 pr-4">
+                  <span
+                    class="font-mono text-xs px-2 py-1 rounded-md mr-3"
+                    [ngClass]="getLogBadgeClass(log.operationType)"
+                    >{{ log.operationType }}</span
+                  >
+                  <span class="text-gray-700 dark:text-gray-300">{{
+                    log.message
+                  }}</span>
+                </td>
+                <td
+                  class="py-3 text-right text-gray-500 dark:text-gray-400 whitespace-nowrap"
+                >
+                  {{ log.timestamp | date : "dd.MM.yyyy HH:mm" }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

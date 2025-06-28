@@ -1,0 +1,72 @@
+# ===================================================================
+# =         CONFIGURARE GENERALA PENTRU API GATEWAY                 =
+# ===================================================================
+server:
+  port: 8080 # Portul pe care va rula API Gateway-ul
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      # ===================================================================
+      # =         DEFINIREA TRASEELOR (ROUTES) PENTRU MICROSERVICII       =
+      # ===================================================================
+      routes:
+        # --- Authentication Service (Port 8082) ---
+        - id: authentication_service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/users/**
+
+        # --- Contact Service (Port 8085) ---
+        - id: contact_service
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/contact/**
+
+        # --- Gallery Service (Port 8086) ---
+        - id: gallery_service_events
+          uri: http://localhost:8086
+          predicates:
+            - Path=/api/v1/events/**
+        - id: gallery_service_categories
+          uri: http://localhost:8086
+          predicates:
+            - Path=/api/v1/categories/**
+
+        # --- Logs Service (Port 8083) ---
+        - id: logs_service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/logs/**
+
+        # --- Restaurant Service (Port 8081) ---
+        - id: restaurant_service_products
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/products/**
+        - id: restaurant_service_categories
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/categories/**
+        - id: restaurant_service_ingredients
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/ingredients/**
+        - id: restaurant_service_orders
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/orders/**
+
+        # --- Reservation Service (Port 8079) ---
+        - id: reservation_service
+          uri: http://localhost:8079
+          predicates:
+            - Path=/api/reservations/**
+
+        # --- Review Service (Port 8084) ---
+        - id: review_service
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/reviews/**

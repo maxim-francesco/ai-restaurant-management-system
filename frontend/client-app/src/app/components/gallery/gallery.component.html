@@ -1,0 +1,135 @@
+<section id="gallery" class="gallery-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Galeria Noastră</h2>
+      <p class="section-subtitle">
+        Descoperă atmosfera și evenimentele găzduite de noi
+      </p>
+    </div>
+
+    <div class="category-filters">
+      <div *ngIf="isLoading" class="loading-message">
+        <p>Se încarcă categoriile...</p>
+      </div>
+      <div *ngIf="!isLoading" class="carousel-wrapper">
+        <button
+          *ngIf="showCategoryPrev"
+          mat-icon-button
+          class="carousel-arrow prev"
+          (click)="scrollCategory(-300)"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <div
+          class="category-buttons"
+          #categoryScroller
+          (scroll)="checkCategoryScroll()"
+          [class.center-when-not-scrollable]="!areCategoriiDerulabile"
+        >
+          <button
+            class="category-button"
+            [class.active]="selectedCategoryId === 'all'"
+            (click)="filterByCategory('all')"
+          >
+            <mat-icon class="category-icon">photo_library</mat-icon>
+            <span class="category-text">Toate</span>
+            <span class="category-count">{{ getTotalImageCount() }}</span>
+          </button>
+          <button
+            *ngFor="let category of allCategories"
+            class="category-button"
+            [class.active]="selectedCategoryId === category.id"
+            (click)="filterByCategory(category.id)"
+          >
+            <mat-icon class="category-icon">{{
+              getIconForCategory(category.name)
+            }}</mat-icon>
+            <span class="category-text">{{ category.name }}</span>
+            <span class="category-count">{{ category.events.length }}</span>
+          </button>
+        </div>
+        <button
+          *ngIf="showCategoryNext"
+          mat-icon-button
+          class="carousel-arrow next"
+          (click)="scrollCategory(300)"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="gallery-grid">
+      <div
+        *ngFor="let i of [1, 2, 3, 4, 5, 6]"
+        class="gallery-item placeholder-glow"
+      ></div>
+    </div>
+    <div
+      *ngIf="!isLoading && filteredImages.length > 0"
+      class="carousel-wrapper gallery-grid-wrapper"
+    >
+      <button
+        *ngIf="showGalleryPrev"
+        mat-icon-button
+        class="carousel-arrow prev"
+        (click)="scrollGallery(-350)"
+      >
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <div
+        class="gallery-grid"
+        #galleryGridScroller
+        (scroll)="checkGalleryScroll()"
+      >
+        <div
+          *ngFor="let image of filteredImages"
+          class="gallery-item"
+          (click)="openLightbox(image)"
+        >
+          <div class="image-container">
+            <img
+              [src]="galleryService.getFullImageUrl(image.photoUrl)"
+              [alt]="image.name"
+              class="gallery-image"
+            />
+            <div class="image-overlay">
+              <div class="overlay-content">
+                <h3>{{ image.name }}</h3>
+                <mat-icon class="zoom-icon">zoom_in</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button
+        *ngIf="showGalleryNext"
+        mat-icon-button
+        class="carousel-arrow next"
+        (click)="scrollGallery(350)"
+      >
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+    <div
+      *ngIf="!isLoading && filteredImages.length === 0"
+      class="no-images-message"
+    >
+      <p>Nu există imagini în această categorie.</p>
+    </div>
+  </div>
+</section>
+
+<div *ngIf="lightboxImage" class="lightbox-overlay" (click)="closeLightbox()">
+  <button class="close-button" (click)="closeLightbox()">
+    <mat-icon>close</mat-icon>
+  </button>
+  <div class="lightbox-content" (click)="$event.stopPropagation()">
+    <img
+      [src]="galleryService.getFullImageUrl(lightboxImage.photoUrl)"
+      [alt]="lightboxImage.name"
+      class="lightbox-image"
+    />
+    <p class="lightbox-caption">{{ lightboxImage.name }}</p>
+  </div>
+</div>

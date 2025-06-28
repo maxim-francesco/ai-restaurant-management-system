@@ -1,0 +1,56 @@
+/* Asigură un raport de aspect pătrat pentru imaginile din galerie,
+   păstrând consistența vizuală. */
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+/* Adaugă stilul pentru butoanele cu dimensiune fixă,
+   preluat din order-management.component.css */
+.fixed-size-button {
+  width: 140px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem; /* rounded-lg */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  transition: background-color 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 0.75rem; /* px-3 */
+}
+
+/* Adaptează butonul pentru ecrane mici, pentru consistență */
+@media (max-width: 640px) {
+  .fixed-size-button {
+    width: 100%;
+    height: 40px;
+  }
+}
+
+/* Stil pentru butoanele din interiorul ferestrelor modale */
+.modal-button {
+  width: 120px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem; /* rounded-lg */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  transition: background-color 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 0.75rem; /* px-3 */
+}
+
+/* Adaptează și aceste butoane pentru ecrane mici */
+@media (max-width: 640px) {
+  .modal-button {
+    width: 100%;
+    height: 40px;
+  }
+}
