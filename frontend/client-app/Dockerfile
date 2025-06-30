@@ -1,7 +1,7 @@
 # Stage 1: Build Angular App
 FROM node:20-alpine AS build
 
-WORKDIR /app
+WORKDIR /client-app
 
 # Copiem package.json și package-lock.json
 COPY package*.json ./
@@ -21,13 +21,13 @@ RUN npm run build --prod
 # Stage 2: Server static minimalist cu http-server
 FROM node:20-alpine AS runtime
 
-WORKDIR /app
+WORKDIR /client-app
 
 # Instalăm http-server global
 RUN npm install -g http-server
 
 # Copiem build-ul din stage-ul anterior
-COPY --from=build /app/dist/client-app /app
+COPY --from=build /dist/client-app /client-app
 
 # Expunem portul pe care va servi aplicația
 EXPOSE 80
