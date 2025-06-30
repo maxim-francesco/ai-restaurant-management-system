@@ -35,7 +35,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://admin-app-production-50a2.up.railway.app:60359", "http://client-app-production-62ab.up.railway.app:4200"));
+        configuration.setAllowedOrigins(Arrays.asList("https://clientapp-648cvri7w-maxim-francescos-projects.vercel.app/", "https://adminapp-l6x3.vercel.app/"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
