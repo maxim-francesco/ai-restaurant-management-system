@@ -1,22 +1,22 @@
-# Stage 1: Build Angular App
-FROM node:20-alpine AS build
+# # Stage 1: Build Angular App
+# FROM node:20-alpine AS build
 
-WORKDIR /client-app
+# WORKDIR /client-app
 
-# Copiem package.json și package-lock.json
-COPY package*.json ./
+# # Copiem package.json și package-lock.json
+# COPY package*.json ./
 
-# Instalăm dependințele
-RUN npm ci --legacy-peer-deps
+# # Instalăm dependințele
+# RUN npm ci --legacy-peer-deps
 
-# Copiem sursele aplicației
-COPY public/ /client-app/public
-COPY src/ /client-app/src
-COPY package.json /client-app
-COPY tsconfig.json /client-app
+# # Copiem sursele aplicației
+# COPY public/ /client-app/public
+# COPY src/ /client-app/src
+# COPY package.json /client-app
+# COPY tsconfig.json /client-app
 
-# Build de producție
-RUN npm run build --prod
+# # Build de producție
+# RUN npm run build --prod
 
 # Stage 2: Server static minimalist cu http-server
 FROM node:20-alpine AS runtime
