@@ -33,7 +33,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         // Aici specificăm originile permise
-        config.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://localhost:60359")); // Portul dinamic poate fi util pentru teste
+        config.setAllowedOrigins(Arrays.asList("http://admin-app-production-50a2.up.railway.app:4200", "http://client-app-production-62ab.up.railway.app:60359")); // Portul dinamic poate fi util pentru teste
         config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization")); // Adăugăm explicit headerele permise
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")); // Adăugăm și PATCH, pentru orice eventualitate
         source.registerCorsConfiguration("/**", config);

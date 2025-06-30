@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**") // Aplică regula pentru toate endpoint-urile care încep cu /api/
-                .allowedOrigins("http://localhost:4200", "http://localhost:60359") // Permite cereri DOAR de la această origine (aplicația ta Angular)
+                .allowedOrigins("http://admin-app-production-50a2.up.railway.app:4200", "http://client-app-production-62ab.up.railway.app:60359") // Permite cereri DOAR de la această origine (aplicația ta Angular)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Specifică metodele HTTP permise
                 .allowedHeaders("*") // Permite orice header-e în cerere (ex: Authorization)
                 .allowCredentials(true); // Permite trimiterea de cookies sau token-uri de autentificare

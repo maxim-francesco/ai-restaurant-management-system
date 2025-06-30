@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class IngredientService {
-  private readonly API_URL = 'http://localhost:8081/api/ingredients';
+  private readonly API_URL =
+    'http://product-service-production-991d.up.railway.app:8080/api/ingredients';
 
   constructor(private http: HttpClient) {}
 

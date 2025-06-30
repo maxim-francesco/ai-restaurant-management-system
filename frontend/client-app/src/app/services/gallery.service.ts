@@ -11,7 +11,8 @@ import { EventCategory } from '../models/gallery/event-category.model';
 export class GalleryService {
   // URL-ul de bază al microserviciului tău de galerie.
   // Asigură-te că portul 8086 este corect.
-  private readonly apiUrl = 'http://localhost:8086/api/v1';
+  private readonly apiUrl =
+    'http://gallery-service-production-9dea.up.railway.app:8080/api/v1';
 
   constructor(private http: HttpClient) {}
 

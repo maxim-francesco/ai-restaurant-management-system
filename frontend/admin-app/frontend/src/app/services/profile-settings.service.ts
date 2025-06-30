@@ -12,7 +12,8 @@ import type { UploadResponse } from '../models/user/upload-response.model';
 })
 export class ProfileSettingsService {
   // Portul 8083 este al serviciului de autentificare, unde se află API-ul de users
-  private apiUrl = 'http://localhost:8082/api/users';
+  private apiUrl =
+    'http://authentication-service-production-eec5.up.railway.app:8080/api/users';
 
   private http = inject(HttpClient);
   private authService = inject(AuthService);

@@ -9,7 +9,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ReservationService {
-  private baseUrl = 'http://localhost:8079/api/reservations';
+  private baseUrl =
+    'http://reservation-service-production.up.railway.app:8080/api/reservations';
 
   constructor(private http: HttpClient) {}
 

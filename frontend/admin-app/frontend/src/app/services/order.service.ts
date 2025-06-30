@@ -8,7 +8,8 @@ import type { OrderDTO, CreateOrderRequest } from '../models/order/order.model';
   providedIn: 'root',
 })
 export class OrderService {
-  private apiUrl = 'http://localhost:8081/api/orders';
+  private apiUrl =
+    'http://product-service-production-991d.up.railway.app:8080/api/orders';
 
   private httpHeaders = new HttpHeaders({
     'Content-Type': 'application/json',

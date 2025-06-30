@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController // 1. O adnotare specială care combină @Controller cu @ResponseBody
 @RequestMapping("/api/contact") // 2. Stabilește un URL de bază pentru toate metodele din această clasă
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:60359"})
+@CrossOrigin(origins = {"http://admin-app-production-50a2.up.railway.app:4200", "http://client-app-production-62ab.up.railway.app:60359"})
 public class ContactInfoController {
 
     private final ContactInfoService contactInfoService;

@@ -10,7 +10,8 @@ import { UserReservationRequest } from '../models/reservation/user-reservation-r
 })
 export class ReservationService {
   // Asigură-te că aceasta corespunde adresei microserviciului tău Java
-  private baseUrl = 'http://localhost:8079/api/reservations';
+  private baseUrl =
+    'http://product-service-production-991d.up.railway.app:8080/api/reservations';
 
   constructor(private http: HttpClient) {}
 
