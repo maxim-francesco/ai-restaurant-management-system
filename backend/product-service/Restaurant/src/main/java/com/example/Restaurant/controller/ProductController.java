@@ -1,6 +1,7 @@
 package com.example.Restaurant.controller;
 
 import com.example.Restaurant.dto.ProductDTO;
+import com.example.Restaurant.dto.ProductDetailDTO;
 import com.example.Restaurant.events.LogEvent;
 import com.example.Restaurant.service.JwtService;
 import com.example.Restaurant.service.ProductService;
@@ -33,6 +34,11 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.findById(id));
+    }
+
+    @GetMapping("/details")
+    public List<ProductDetailDTO> getAllWithDetails() {
+        return productService.findAllWithDetails();
     }
 
     @PostMapping

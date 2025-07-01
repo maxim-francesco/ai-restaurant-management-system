@@ -1,6 +1,7 @@
 package com.example.Restaurant.mapper;
 
 import com.example.Restaurant.dto.ProductDTO;
+import com.example.Restaurant.dto.ProductDetailDTO;
 import com.example.Restaurant.model.Category;
 import com.example.Restaurant.model.Ingredient;
 import com.example.Restaurant.model.Product;
@@ -39,6 +40,25 @@ public class ProductMapper {
                 .category(category)
                 .ingredients(ingredients)
                 .imageUrl(dto.getImageUrl()) // Adăugat câmpul imageUrl
+                .build();
+    }
+
+    public static ProductDetailDTO toDetailDTO(Product product) {
+        if (product == null) return null;
+
+        return ProductDetailDTO.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .description(product.getDescription())
+                .price(product.getPrice())
+                .imageUrl(product.getImageUrl())
+                // Folosim mapperele existente pentru a converti obiectele imbricate
+                .category(CategoryMapper.toDTO(product.getCategory()))
+                .ingredients(product.getIngredients() != null ?
+                        product.getIngredients().stream()
+                                .map(IngredientMapper::toDTO)
+                                .collect(Collectors.toSet())
+                        : null)
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 package com.example.Restaurant.service.impl;
 
 import com.example.Restaurant.dto.ProductDTO;
+import com.example.Restaurant.dto.ProductDetailDTO;
 import com.example.Restaurant.mapper.ProductMapper;
 import com.example.Restaurant.model.Category;
 import com.example.Restaurant.model.Ingredient;
@@ -40,6 +41,14 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDTO> findAll() {
         return productRepository.findAll().stream()
                 .map(ProductMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDetailDTO> findAllWithDetails() {
+        // Apelăm metoda optimizată din repository și mapper-ul pentru detalii
+        return productRepository.findAllWithDetails().stream()
+                .map(ProductMapper::toDetailDTO)
                 .collect(Collectors.toList());
     }
 
@@ -162,4 +171,6 @@ public class ProductServiceImpl implements ProductService {
         }
     }
     // =============== END MODIFICARE ===============
+
+
 }
