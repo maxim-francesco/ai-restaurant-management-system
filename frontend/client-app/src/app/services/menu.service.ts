@@ -45,7 +45,7 @@ export class MenuService {
 
   // Adăugăm URL-ul de bază pentru imaginile servite de backend
   private readonly IMAGES_BASE_URL =
-    'http://localhost:8081/uploads/product-images/'; // Asigură-te că acesta este corect
+    'https://product-service-production-991d.up.railway.app/uploads/product-images/'; // Asigură-te că acesta este corect
 
   constructor() {}
 

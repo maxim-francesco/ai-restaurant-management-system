@@ -33,7 +33,8 @@ interface Notification {
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  private serverUrl = 'http://localhost:8082'; // Am actualizat portul la cel de auth
+  private serverUrl =
+    'https://authentication-service-production-eec5.up.railway.app'; // Am actualizat portul la cel de auth
 
   // Authentication state
   isLoggedIn = false;

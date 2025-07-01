@@ -8,7 +8,7 @@ import { ContactInfo } from '../models/contact/contact-info.model';
 })
 export class ContactService {
   private apiUrl =
-    'http://contact-service-production.up.railway.app:8080/api/contact';
+    'https://contact-service-production.up.railway.app/api/contact';
 
   constructor(private http: HttpClient) {}
 

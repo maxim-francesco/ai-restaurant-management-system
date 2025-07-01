@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ProductService {
   private readonly API_URL =
-    'http://product-service-production-991d.up.railway.app:8080/api/products';
+    'https://product-service-production-991d.up.railway.app/api/products';
 
   private http = inject(HttpClient);
 

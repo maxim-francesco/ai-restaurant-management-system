@@ -9,7 +9,7 @@ import type { OrderDTO, CreateOrderRequest } from '../models/order/order.model';
 })
 export class OrderService {
   private apiUrl =
-    'http://product-service-production-991d.up.railway.app:8080/api/orders';
+    'https://product-service-production-991d.up.railway.app/api/orders';
 
   private httpHeaders = new HttpHeaders({
     'Content-Type': 'application/json',

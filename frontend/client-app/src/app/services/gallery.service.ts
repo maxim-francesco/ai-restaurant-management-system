@@ -12,7 +12,7 @@ export class GalleryService {
   // URL-ul de bază al microserviciului tău de galerie.
   // Asigură-te că portul 8086 este corect.
   private readonly apiUrl =
-    'http://gallery-service-production-9dea.up.railway.app:8080/api/v1';
+    'https://gallery-service-production-9dea.up.railway.app/api/v1';
 
   constructor(private http: HttpClient) {}
 
@@ -34,6 +34,6 @@ export class GalleryService {
   public getFullImageUrl(photoFileName: string): string {
     // Asigură-te că URL-ul și calea "/uploads/gallery/" corespund cu configurația
     // din WebConfig.java din proiectul Spring Boot.
-    return `http://localhost:8086/uploads/gallery/${photoFileName}`;
+    return `https://gallery-service-production-9dea.up.railway.app/uploads/gallery/${photoFileName}`;
   }
 }

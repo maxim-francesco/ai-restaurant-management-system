@@ -22,7 +22,8 @@ interface Notification {
   styleUrls: ['./profile-settings.component.css'],
 })
 export class ProfileSettingsComponent implements OnInit, OnDestroy {
-  private serverUrl = 'http://localhost:8082';
+  private serverUrl =
+    'https://authentication-service-production-eec5.up.railway.app';
   private destroy$ = new Subject<void>();
 
   currentUser: User | null = null;

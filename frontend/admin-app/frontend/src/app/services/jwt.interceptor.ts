@@ -14,9 +14,9 @@ export class JwtInterceptor implements HttpInterceptor {
 
   // --- Adresele API pe care vrem să le securizăm ---
   private reservationsApiUrl =
-    'http://reservation-service-production.up.railway.app:8080/api/reservations'; // Schimbă portul dacă e necesar
+    'https://reservation-service-production.up.railway.app/api/reservations'; // Schimbă portul dacă e necesar
   private restaurantApiUrl =
-    'http://product-service-production-991d.up.railway.app:8080/api/'; // Schimbă portul dacă e necesar
+    'https://product-service-production-991d.up.railway.app/api/'; // Schimbă portul dacă e necesar
 
   intercept(
     request: HttpRequest<unknown>,

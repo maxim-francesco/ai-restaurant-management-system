@@ -18,7 +18,7 @@ export class ReviewService {
 
   // URL-ul API-ului nostru Spring Boot
   private readonly apiUrl =
-    'http://review-service-production-47c5.up.railway.app:8080/api/reviews';
+    'https://review-service-production-47c5.up.railway.app/api/reviews';
 
   /**
    * Metoda pentru a obtine o lista paginata de review-uri.

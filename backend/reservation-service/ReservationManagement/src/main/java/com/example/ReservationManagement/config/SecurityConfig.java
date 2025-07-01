@@ -51,7 +51,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         // Permitem request-uri de la originea aplicației Angular
-        configuration.setAllowedOrigins(Arrays.asList("https://clientapp-648cvri7w-maxim-francescos-projects.vercel.app/", "https://adminapp-cttk.vercel.app/"));
+        configuration.setAllowedOrigins(Arrays.asList("https://clientapp-wvvp-git-main-maxim-francescos-projects.vercel.app/", "https://adminapp-cttk.vercel.app/"));
         // Permitem metodele HTTP standard
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         // Permitem toate header-ele, inclusiv cel de Authorization

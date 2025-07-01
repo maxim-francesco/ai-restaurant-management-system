@@ -8,7 +8,7 @@ import type { ActivityLog } from '../models/logs/activity-log.model';
 })
 export class ActivityLogService {
   // Portul 8085 este cel pe care rulează logs-service (confirmat anterior)
-  private apiUrl = 'http://localhost:8083/api/logs';
+  private apiUrl = 'https://logs-service-production.up.railway.app/api/logs';
 
   private http = inject(HttpClient);
 

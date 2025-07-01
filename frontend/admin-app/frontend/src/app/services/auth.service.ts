@@ -17,7 +17,7 @@ import type { User } from '../models/user/user.model';
 })
 export class AuthService {
   private apiUrl =
-    'http://authentication-service-production-eec5.up.railway.app:8080/api/users';
+    'https://authentication-service-production-eec5.up.railway.app/api/users';
   private TOKEN_KEY = 'jwt_token';
 
   private currentUserSubject = new BehaviorSubject<User | null>(null);

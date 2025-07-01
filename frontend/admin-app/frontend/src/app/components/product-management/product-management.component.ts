@@ -831,9 +831,9 @@ export class ProductManagementComponent implements OnInit {
   getFullImageUrl(fileName: string | undefined): string {
     if (fileName) {
       // Aceasta trebuie să se potrivească cu ce ai configurat în backend Spring Boot
-      // Unde "http://localhost:8081" este URL-ul microserviciului tău
+      // Unde "https://localhost:8081" este URL-ul microserviciului tău
       // Și "/uploads/product-images/" este mapping-ul resurselor statice
-      return `http://localhost:8081/uploads/product-images/${fileName}`;
+      return `https://product-service-production-991d.up.railway.app/uploads/product-images/${fileName}`;
     }
     // Poți returna un URL pentru o imagine placeholder dacă nu există imagine
     return 'assets/placeholder-image.png'; // Asigură-te că ai o imagine placeholder

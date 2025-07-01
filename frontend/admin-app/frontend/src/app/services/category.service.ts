@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class CategoryService {
   private readonly API_URL =
-    'http://product-service-production-991d.up.railway.app:8080/api/categories';
+    'https://product-service-production-991d.up.railway.app/api/categories';
 
   constructor(private http: HttpClient) {}
 

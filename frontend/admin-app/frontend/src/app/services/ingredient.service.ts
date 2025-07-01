@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class IngredientService {
   private readonly API_URL =
-    'http://product-service-production-991d.up.railway.app:8080/api/ingredients';
+    'https://product-service-production-991d.up.railway.app/api/ingredients';
 
   constructor(private http: HttpClient) {}
 
