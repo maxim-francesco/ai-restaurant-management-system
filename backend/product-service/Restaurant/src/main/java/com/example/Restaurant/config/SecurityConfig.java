@@ -26,16 +26,17 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
 
+    // SecurityConfig.java
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        // Aici specificăm originile permise
-        config.setAllowedOrigins(Arrays.asList("https://clientapp-seven.vercel.app/", "https://adminapp-g3ll.vercel.app")); // Portul dinamic poate fi util pentru teste
-        config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization")); // Adăugăm explicit headerele permise
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")); // Adăugăm și PATCH, pentru orice eventualitate
+        // FĂRĂ SLASH LA FINAL
+        config.setAllowedOrigins(Arrays.asList("https://clientapp-seven.vercel.app", "https://adminapp-g3ll.vercel.app"));
+        config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
