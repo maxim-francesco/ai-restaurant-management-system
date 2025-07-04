@@ -34,7 +34,8 @@ public class ProductServiceImpl implements ProductService {
 
     // ============== START MODIFICARE ==============
     // Define the directory where images will be stored
-    private final String uploadDir = "uploads/product-images/";
+    // Define the directory where images will be stored
+    private final String uploadDir = "/tmp/uploads/product-images/";
     // =============== END MODIFICARE ===============
 
     @Override
