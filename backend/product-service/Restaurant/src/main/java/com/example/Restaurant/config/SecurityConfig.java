@@ -33,7 +33,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         // Aici specificăm originile permise
-        config.setAllowedOrigins(Arrays.asList("https://clientapp-wvvp-git-main-maxim-francescos-projects.vercel.app/", "https://adminapp-cttk.vercel.app/")); // Portul dinamic poate fi util pentru teste
+        config.setAllowedOrigins(Arrays.asList("https://clientapp-wvvp.vercel.app/", "https://adminapp-cttk.vercel.app/")); // Portul dinamic poate fi util pentru teste
         config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization")); // Adăugăm explicit headerele permise
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")); // Adăugăm și PATCH, pentru orice eventualitate
         source.registerCorsConfiguration("/**", config);
