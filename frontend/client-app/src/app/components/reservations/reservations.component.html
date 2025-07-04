@@ -15,6 +15,7 @@
             </mat-card-title>
           </mat-card-header>
           <mat-card-content>
+            <!-- Informațiile existente -->
             <div class="info-item">
               <mat-icon>schedule</mat-icon>
               <div>
@@ -48,6 +49,22 @@
                 <p>+40 264 123 456<br />info{{ "@" }}bellavista.ro</p>
               </div>
             </div>
+
+            <!-- NOU: Butonul pentru solicitare apel -->
+            <div class="call-request-action">
+              <button
+                mat-flat-button
+                class="call-request-button"
+                (click)="requestACall()"
+                [disabled]="isRequestingCall"
+              >
+                <mat-icon *ngIf="!isRequestingCall">ring_volume</mat-icon>
+                <mat-icon *ngIf="isRequestingCall" class="spinning"
+                  >hourglass_empty</mat-icon
+                >
+                {{ isRequestingCall ? "Se trimite..." : "Solicită un apel" }}
+              </button>
+            </div>
           </mat-card-content>
         </mat-card>
       </div>
@@ -66,6 +83,7 @@
               (ngSubmit)="onSubmit()"
               class="reservation-form"
             >
+              <!-- Secțiunile formularului rămân neschimbate -->
               <div class="form-section">
                 <h3>Informații Personale</h3>
                 <div class="form-row">
@@ -159,6 +177,7 @@
                 </mat-form-field>
               </div>
 
+              <!-- Containerul de acțiuni conține acum doar butonul principal -->
               <div class="form-actions">
                 <button
                   mat-raised-button

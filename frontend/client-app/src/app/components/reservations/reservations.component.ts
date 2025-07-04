@@ -1,5 +1,5 @@
 // src/app/reservations/reservations.component.ts
-import { Component, OnInit } from '@angular/core'; // MODIFICARE: Am adăugat OnInit
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -18,6 +18,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { ReservationService } from '../../services/reservation.service';
 import { UserReservationRequest } from '../../models/reservation/user-reservation-request.model';
+// NOU: Importăm serviciul și interfața pentru n8n
+import {
+  ReservationN8nService,
+  ReservationData,
+} from '../../services/reservation-n8n.service';
 
 @Component({
   selector: 'app-reservations',
@@ -38,13 +43,14 @@ import { UserReservationRequest } from '../../models/reservation/user-reservatio
   templateUrl: './reservations.component.html',
   styleUrls: ['./reservations.component.css'],
 })
-// MODIFICARE: Am implementat OnInit
 export class ReservationsComponent implements OnInit {
   reservationForm: FormGroup;
   isSubmitting = false;
   minDate = new Date();
 
-  // Lista master cu toate orele posibile
+  // NOU: Stare separată pentru butonul de solicitare apel
+  isRequestingCall = false;
+
   private readonly allTimeSlots = [
     '12:00',
     '12:30',
@@ -61,52 +67,44 @@ export class ReservationsComponent implements OnInit {
     '22:00',
   ];
 
-  // MODIFICARE: Aceasta va fi lista afișată în template
   filteredTimeSlots: string[] = [];
-
   partySize = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   constructor(
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
-    private reservationService: ReservationService
+    private reservationService: ReservationService,
+    // Injectăm serviciul n8n
+    private reservationN8nService: ReservationN8nService
   ) {
     this.reservationForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       phone: ['', [Validators.required, Validators.pattern(/^[0-9+\-\s()]+$/)]],
-      date: [new Date(), Validators.required], // MODIFICARE: Setăm data de azi ca valoare inițială
+      date: [new Date(), Validators.required],
       time: ['', Validators.required],
       guests: [2, [Validators.required, Validators.min(1), Validators.max(10)]],
       specialRequests: [''],
     });
   }
 
-  // MODIFICARE: Am adăugat metoda ngOnInit
   ngOnInit(): void {
-    // Apelăm funcția de filtrare la început pentru a seta starea inițială corectă
     this.filterTimeSlots(this.reservationForm.get('date')?.value);
-
-    // Ascultăm pentru schimbări în câmpul de dată
     this.reservationForm.get('date')?.valueChanges.subscribe((selectedDate) => {
       this.filterTimeSlots(selectedDate);
     });
   }
 
-  // MODIFICARE: Funcție nouă pentru a filtra orele
   private filterTimeSlots(selectedDate: Date | null): void {
     if (!selectedDate) {
       this.filteredTimeSlots = [];
       return;
     }
-
     const now = new Date();
     const isToday = selectedDate.toDateString() === now.toDateString();
-
     if (isToday) {
       const currentHour = now.getHours();
       const currentMinute = now.getMinutes();
-
       this.filteredTimeSlots = this.allTimeSlots.filter((time) => {
         const [slotHour, slotMinute] = time.split(':').map(Number);
         return (
@@ -115,24 +113,21 @@ export class ReservationsComponent implements OnInit {
         );
       });
     } else {
-      // Dacă data este în viitor, afișăm toate orele
       this.filteredTimeSlots = [...this.allTimeSlots];
     }
-
-    // Verificăm dacă ora selectată anterior mai este validă. Dacă nu, o resetăm.
     const currentTimeValue = this.reservationForm.get('time')?.value;
     if (
       currentTimeValue &&
       !this.filteredTimeSlots.includes(currentTimeValue)
     ) {
-      this.reservationForm.get('time')?.setValue(''); // sau .reset()
+      this.reservationForm.get('time')?.setValue('');
     }
   }
 
+  // Metoda pentru butonul principal de rezervare (rămâne neschimbată)
   onSubmit() {
     if (this.reservationForm.valid) {
       this.isSubmitting = true;
-
       const formValue = this.reservationForm.value;
       const selectedDate: Date = formValue.date;
       const selectedTime: string = formValue.time;
@@ -160,26 +155,17 @@ export class ReservationsComponent implements OnInit {
               'Închide',
               { duration: 5000, panelClass: ['success-snackbar'] }
             );
-            this.reservationForm.reset({
-              date: new Date(), // Resetăm data la ziua curentă
-              guests: 2,
-            });
-            this.filterTimeSlots(new Date()); // Re-filtram orele după resetare
+            this.reservationForm.reset({ date: new Date(), guests: 2 });
+            this.filterTimeSlots(new Date());
           },
           error: (error) => {
             this.isSubmitting = false;
             console.error('Eroare la trimiterea rezervării:', error);
-            let errorMessage =
-              'A apărut o eroare la trimiterea rezervării. Vă rugăm să încercați din nou.';
-            if (error.error && error.error.message) {
-              errorMessage = error.error.message;
-            } else if (error.message) {
-              errorMessage = error.message;
-            }
-            this.snackBar.open(errorMessage, 'Închide', {
-              duration: 7000,
-              panelClass: ['error-snackbar'],
-            });
+            this.snackBar.open(
+              'A apărut o eroare la trimiterea rezervării.',
+              'Închide',
+              { duration: 7000, panelClass: ['error-snackbar'] }
+            );
           },
         });
     } else {
@@ -192,10 +178,43 @@ export class ReservationsComponent implements OnInit {
     }
   }
 
+  // NOU: Metodă pentru a solicita un apel prin n8n, independent de formular
+  requestACall() {
+    this.isRequestingCall = true;
+
+    const callRequestPayload: ReservationData = {
+      customerName: 'Client-Solicitare-Apel',
+      phoneNumber: 'N/A - Sunați înapoi',
+      reservationDateTime: new Date().toISOString(), // Trimitem data curentă pentru context
+      numberOfPeople: 0,
+    };
+
+    this.reservationN8nService
+      .triggerReservationWorkflow(callRequestPayload)
+      .subscribe({
+        next: (response) => {
+          this.isRequestingCall = false;
+          this.snackBar.open(
+            'Solicitarea a fost trimisă! Vă vom contacta în cel mai scurt timp.',
+            'OK',
+            { duration: 5000, panelClass: ['success-snackbar'] }
+          );
+        },
+        error: (error) => {
+          this.isRequestingCall = false;
+          console.error('Eroare la solicitarea apelului:', error);
+          this.snackBar.open(
+            'Nu am putut trimite solicitarea. Vă rugăm încercați mai târziu.',
+            'Închide',
+            { duration: 7000, panelClass: ['error-snackbar'] }
+          );
+        },
+      });
+  }
+
   private markFormGroupTouched() {
-    Object.keys(this.reservationForm.controls).forEach((key) => {
-      const control = this.reservationForm.get(key);
-      control?.markAsTouched();
+    Object.values(this.reservationForm.controls).forEach((control) => {
+      control.markAsTouched();
     });
   }
 

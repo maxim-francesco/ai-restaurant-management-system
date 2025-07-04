@@ -138,9 +138,12 @@
   background-color: rgba(212, 175, 55, 0.1);
 }
 
+/* NOU: Stiluri pentru containerul de butoane */
 .form-actions {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap; /* Permite butoanelor sa treaca pe randul urmator pe ecrane mici */
+  gap: 1rem; /* Adaugă spațiu între butoane */
   margin-top: 2rem;
 }
 
@@ -171,6 +174,28 @@
   cursor: not-allowed;
 }
 
+/* NOU: Stiluri pentru butonul n8n */
+.n8n-button {
+  color: #2d5016;
+  border-color: #2d5016;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 1rem 3rem;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.n8n-button:hover:not(:disabled) {
+  background-color: rgba(45, 80, 22, 0.05);
+  transform: translateY(-2px);
+}
+
 .spinning {
   animation: spin 1s linear infinite;
 }
@@ -188,72 +213,57 @@
   background: #4caf50;
   color: white;
 }
+
 @media (max-width: 768px) {
   .reservation-content {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-
   .form-row {
     flex-direction: column;
     gap: 0;
   }
-
   .half-width {
     width: 100%;
   }
-
   .section-title {
     font-size: 2.5rem;
   }
-
   .container {
     padding: 0 1rem;
   }
-
   .reservations-section {
     padding: 4rem 0;
   }
-
   .info-card {
     position: static;
   }
-
-  /* START MODIFICĂRI PENTRU VIZUALIZARE MOBILĂ */
-
-  /* 1. Transformăm containerul informațiilor într-o grilă */
   .info-card mat-card-content {
     display: grid;
-    /* Creează o grilă responsivă: 2 coloane dacă încap, altfel 1 coloană. */
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem; /* Spațiu între elementele grilei */
+    gap: 1rem;
   }
-
-  /* 2. Ajustăm stilul fiecărui element informativ pentru a se potrivi în grilă */
   .info-item {
-    margin-bottom: 0; /* Eliminăm marginea de jos, deoarece avem 'gap' */
+    margin-bottom: 0;
     display: flex;
-    flex-direction: column; /* Stivuim iconița și textul pe verticală */
-    align-items: center; /* Centram conținutul */
-    text-align: center; /* Centram textul */
-    padding: 1.5rem 1rem; /* Mărim puțin padding-ul pentru un aspect mai aerisit */
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem 1rem;
   }
-
-  /* 3. Ajustăm iconița */
   .info-item mat-icon {
     margin-top: 0;
-    margin-bottom: 0.75rem; /* Adăugăm spațiu sub iconiță */
+    margin-bottom: 0.75rem;
   }
-
-  /* END MODIFICĂRI */
 }
 
 @media (max-width: 480px) {
   .section-title {
     font-size: 2rem;
   }
-
-  .submit-button {
+  .submit-button,
+  .n8n-button {
+    /* NOU: Aplicăm stilul și butonului n8n */
     width: 100%;
     padding: 1rem 2rem;
   }
