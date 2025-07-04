@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder; // NOU: Injectăm encoder-ul
-    private final Path rootLocation = Paths.get("uploads");
+    private final Path rootLocation = Paths.get("/tmp/uploads"); // Cale absolută
 
     // NOU: Actualizăm constructorul pentru a primi și PasswordEncoder
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {

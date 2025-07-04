@@ -13,8 +13,9 @@ public class WebConfig implements WebMvcConfigurer {
         // Această linie mapează cererile URL care încep cu /uploads/gallery/**
         // la folderul fizic 'uploads/gallery/' de pe disc.
         // "file:" este esențial pentru a indica o cale din sistemul de fișiere.
+        // CORECT - folosește o cale absolută, sigură pentru Railway
         registry.addResourceHandler("/uploads/gallery/**")
-                .addResourceLocations("file:./uploads/gallery/");
+                .addResourceLocations("file:/tmp/uploads/gallery/");
     }
 
     @Override

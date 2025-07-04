@@ -15,7 +15,8 @@ import java.util.UUID;
 public class FileStorageServiceImpl implements FileStorageService {
 
     // Definim calea direct în cod, ca o constantă, conform convenției tale.
-    private final String uploadDir = "./uploads/gallery";
+    // Definim calea direct în cod, ca o constantă, conform convenției tale.
+    private final String uploadDir = "/tmp/uploads/gallery";
     private final Path fileStorageLocation;
 
     // Constructorul folosește constanta definită mai sus.

@@ -17,6 +17,6 @@ public class WebConfig implements WebMvcConfigurer {
         // Când un request vine la o adresă care începe cu "/images/**"
         // Spring va căuta fișierul corespunzător în folderul "uploads/" de pe disc.
         registry.addResourceHandler("/images/**")
-                .addResourceLocations("file:uploads/");
+                .addResourceLocations("file:/tmp/uploads/"); // Cale absolută
     }
 }
