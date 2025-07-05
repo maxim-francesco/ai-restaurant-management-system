@@ -27,8 +27,6 @@ public class ContactInfoDTO {
     @NotBlank(message = "Programul nu poate fi gol.")
     private String schedule;
 
-    // Pentru URL-uri, putem valida formatul.
-    // Acestea sunt opționale, deci nu punem @NotBlank.
     @URL(message = "URL-ul pentru Facebook nu este valid.")
     private String facebookUrl;
 

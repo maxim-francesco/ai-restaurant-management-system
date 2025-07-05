@@ -13,8 +13,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/logs")
 public class LogController {
-
-    // 1. Acum depindem de Service, nu de Repository
     private final LogService logService;
 
     @Autowired
@@ -23,9 +21,7 @@ public class LogController {
     }
 
     @GetMapping
-    // 2. Tipul de răspuns este acum o listă de DTO-uri
     public ResponseEntity<List<LogResponseDTO>> getLogs() {
-        // 3. Apelăm metoda din service, care conține toată logica
         List<LogResponseDTO> logs = logService.getLatestLogs();
         return ResponseEntity.ok(logs);
     }

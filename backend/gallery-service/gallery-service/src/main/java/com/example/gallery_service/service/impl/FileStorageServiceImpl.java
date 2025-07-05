@@ -11,19 +11,15 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
-@Service // Marchează clasa ca fiind un serviciu gestionat de Spring
+@Service
 public class FileStorageServiceImpl implements FileStorageService {
 
-    // Definim calea direct în cod, ca o constantă, conform convenției tale.
-    // Definim calea direct în cod, ca o constantă, conform convenției tale.
     private final String uploadDir = "/tmp/uploads/gallery";
     private final Path fileStorageLocation;
 
-    // Constructorul folosește constanta definită mai sus.
     public FileStorageServiceImpl() {
         this.fileStorageLocation = Paths.get(this.uploadDir).toAbsolutePath().normalize();
         try {
-            // Se asigură că directorul există la pornirea aplicației.
             Files.createDirectories(this.fileStorageLocation);
         } catch (Exception ex) {
             throw new RuntimeException("Nu s-a putut crea directorul pentru stocarea fișierelor.", ex);
@@ -37,11 +33,8 @@ public class FileStorageServiceImpl implements FileStorageService {
         try {
             fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
         } catch (Exception e) {
-            // Ignorăm dacă nu are extensie
         }
-        // Generează un nume unic pentru a evita suprascrierea
         String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
-
         try {
             Path targetLocation = this.fileStorageLocation.resolve(uniqueFileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);

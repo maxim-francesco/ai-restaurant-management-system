@@ -25,7 +25,7 @@ public class ProductMapper {
                                 .map(Ingredient::getId)
                                 .collect(Collectors.toSet())
                         : null)
-                .imageUrl(product.getImageUrl()) // Adăugat câmpul imageUrl
+                .imageUrl(product.getImageUrl())
                 .build();
     }
 
@@ -39,7 +39,7 @@ public class ProductMapper {
                 .price(dto.getPrice())
                 .category(category)
                 .ingredients(ingredients)
-                .imageUrl(dto.getImageUrl()) // Adăugat câmpul imageUrl
+                .imageUrl(dto.getImageUrl())
                 .build();
     }
 
@@ -52,7 +52,6 @@ public class ProductMapper {
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .imageUrl(product.getImageUrl())
-                // Folosim mapperele existente pentru a converti obiectele imbricate
                 .category(CategoryMapper.toDTO(product.getCategory()))
                 .ingredients(product.getIngredients() != null ?
                         product.getIngredients().stream()

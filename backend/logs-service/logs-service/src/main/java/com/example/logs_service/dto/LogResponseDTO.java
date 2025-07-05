@@ -7,6 +7,6 @@ public class LogResponseDTO {
     private Long id;
     private String message;
     private String timestamp;
-    private String logType;       // NOU
-    private String operationType; // NOU
+    private String logType;
+    private String operationType;
 }

@@ -6,7 +6,6 @@ import com.example.ReservationManagement.model.ReservationStatus;
 
 public class ReservationMapper {
 
-    // Mapping pentru rezervări făcute de utilizatori - status implicit: PENDING
     public static Reservation toEntity(UserReservationRequestDTO dto) {
         Reservation reservation = new Reservation();
         reservation.setCustomerName(dto.getCustomerName());
@@ -17,7 +16,6 @@ public class ReservationMapper {
         return reservation;
     }
 
-    // Mapping pentru rezervări create de admin - status la alegere (CONFIRMED/PENDING/etc.)
     public static Reservation toEntity(AdminReservationRequestDTO dto) {
         Reservation reservation = new Reservation();
         reservation.setCustomerName(dto.getCustomerName());
@@ -28,7 +26,6 @@ public class ReservationMapper {
         return reservation;
     }
 
-    // Transformare din entitate în DTO pentru răspunsuri
     public static ReservationResponseDTO toDto(Reservation reservation) {
         return ReservationResponseDTO.builder()
                 .id(reservation.getId())
@@ -40,7 +37,6 @@ public class ReservationMapper {
                 .build();
     }
 
-    // Update doar pentru status
     public static void updateStatusFromDto(UpdateReservationStatusDTO dto, Reservation reservation) {
         if (dto.getStatus() != null) {
             reservation.setStatus(dto.getStatus());

@@ -13,8 +13,8 @@ import java.util.Date;
 public class LogEvent implements Serializable {
 
     private String message;
-    private String logType;       // ex: "PRODUCT"
-    private String operationType; // ex: "CREATE", "UPDATE", "DELETE"
+    private String logType;
+    private String operationType;
     private Date timestamp;
 
     public LogEvent(String message, String logType, String operationType) {

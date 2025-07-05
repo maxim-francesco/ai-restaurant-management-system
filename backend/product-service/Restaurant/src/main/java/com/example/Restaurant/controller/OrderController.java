@@ -17,16 +17,13 @@ import java.util.List;
 @RequestMapping("/api/orders")
 public class OrderController {
 
-    // Constante pentru RabbitMQ
     private static final String EXCHANGE_NAME = "logs_exchange";
     private static final String ROUTING_KEY_ORDER = "log.order.event";
 
-    // Dependințele necesare
     private final OrderService orderService;
     private final RabbitTemplate rabbitTemplate;
     private final JwtService jwtService;
 
-    // Constructor cu toate dependințele
     public OrderController(OrderService orderService, RabbitTemplate rabbitTemplate, JwtService jwtService) {
         this.orderService = orderService;
         this.rabbitTemplate = rabbitTemplate;
@@ -37,10 +34,8 @@ public class OrderController {
     public ResponseEntity<OrderDTO> createOrder(@RequestBody CreateOrderRequest createOrderRequest,
                                                 @RequestHeader("Authorization") String authHeader) {
         try {
-            // Logica de business
             OrderDTO createdOrder = orderService.createOrder(createOrderRequest);
 
-            // Logica de logging
             try {
                 final String token = authHeader.substring(7);
                 final String userName = jwtService.extractName(token);
@@ -72,20 +67,17 @@ public class OrderController {
                                                 @RequestBody OrderDTO orderDTO,
                                                 @RequestHeader("Authorization") String authHeader) {
         try {
-            // Logica de business
             OrderDTO updatedOrder = orderService.updateOrder(id, orderDTO);
 
-            // --- Logica de logging MODIFICATĂ ---
             try {
                 final String token = authHeader.substring(7);
                 final String userName = jwtService.extractName(token);
 
-                // MODIFICAT: Am schimbat mesajul pentru a folosi câmpuri existente
                 String logMessage = String.format(
                         "Utilizatorul '%s' a actualizat comanda cu ID-ul %d. Noul total este: %.2f.",
                         userName,
                         updatedOrder.getId(),
-                        updatedOrder.getTotalAmount()); // Folosim suma totală
+                        updatedOrder.getTotalAmount());
 
                 LogEvent event = new LogEvent(logMessage, "ORDER", "UPDATE");
                 rabbitTemplate.convertAndSend(EXCHANGE_NAME, ROUTING_KEY_ORDER, event);
@@ -106,7 +98,6 @@ public class OrderController {
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id,
                                             @RequestHeader("Authorization") String authHeader) {
         try {
-            // Logica de logging (înainte de ștergere)
             try {
                 final String token = authHeader.substring(7);
                 final String userName = jwtService.extractName(token);
@@ -122,7 +113,6 @@ public class OrderController {
                 System.err.println("### Eroare la trimiterea log-ului de comandă (delete): " + logEx.getMessage());
             }
 
-            // Logica de business
             orderService.deleteOrder(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (EntityNotFoundException e) {
@@ -130,7 +120,6 @@ public class OrderController {
         }
     }
 
-    // Metodele read-only rămân neschimbate
     @GetMapping("/{id}")
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id) {
         try {

@@ -16,8 +16,5 @@ public class ProductDTO {
     private BigDecimal price;
     private Long categoryId;
     private Set<Long> ingredientIds;
-
-    // ============== START MODIFICARE ==============
     private String imageUrl;
-    // =============== END MODIFICARE ===============
 }

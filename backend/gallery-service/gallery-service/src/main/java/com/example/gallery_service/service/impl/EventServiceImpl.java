@@ -1,4 +1,4 @@
-package com.example.gallery_service.service;
+package com.example.gallery_service.service.impl;
 
 import com.example.gallery_service.dto.CreateEventRequest;
 import com.example.gallery_service.dto.EventDto;
@@ -7,6 +7,8 @@ import com.example.gallery_service.model.Event;
 import com.example.gallery_service.model.EventCategory;
 import com.example.gallery_service.repository.EventCategoryRepository;
 import com.example.gallery_service.repository.EventRepository;
+import com.example.gallery_service.service.EventService;
+import com.example.gallery_service.service.FileStorageService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,12 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
-public class EventServiceImpl implements EventService { // Implementăm interfața
+public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final EventCategoryRepository categoryRepository;
     private final EventMapper eventMapper;
-    // Dependența se face către interfață!
     private final FileStorageService fileStorageService;
 
     @Override

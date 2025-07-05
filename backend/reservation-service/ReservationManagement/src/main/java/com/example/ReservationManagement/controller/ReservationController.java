@@ -48,7 +48,6 @@ public class ReservationController {
                     response.getId(),
                     response.getCustomerName());
 
-            // MODIFICAT: Creăm și trimitem un obiect LogEvent
             LogEvent event = new LogEvent(logMessage, "RESERVATION", "CREATE");
             rabbitTemplate.convertAndSend(EXCHANGE_NAME, ROUTING_KEY_RESERVATION, event);
 
@@ -65,10 +64,8 @@ public class ReservationController {
             @RequestBody UpdateReservationStatusDTO statusDTO,
             @RequestHeader("Authorization") String authHeader) {
 
-        // Logica de business
         reservationService.updateStatus(id, statusDTO);
 
-        // Logica de logging
         try {
             final String token = authHeader.substring(7);
             final String userName = jwtService.extractName(token);
@@ -91,7 +88,6 @@ public class ReservationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id,
                                                   @RequestHeader("Authorization") String authHeader) {
-        // Logăm înainte de a șterge pentru a avea acces la informații
         try {
             ReservationResponseDTO reservationToDelete = reservationService.getReservationById(id);
             final String token = authHeader.substring(7);
@@ -109,12 +105,10 @@ public class ReservationController {
             System.err.println("### Eroare la trimiterea log-ului de rezervare (delete): " + e.getMessage());
         }
 
-        // Executăm ștergerea
         reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
 
-    // Restul metodelor (GET, /user) rămân neschimbate...
     @PostMapping("/user")
     public ResponseEntity<ReservationResponseDTO> createUserReservation(
             @RequestBody UserReservationRequestDTO requestDTO) {

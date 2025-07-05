@@ -15,5 +15,5 @@ public class AdminReservationRequestDTO {
     private String phoneNumber;
     private LocalDateTime reservationDateTime;
     private int numberOfPeople;
-    private ReservationStatus status; // poate fi CONFIRMED sau PENDING
+    private ReservationStatus status;
 }

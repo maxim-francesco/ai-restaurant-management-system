@@ -52,14 +52,12 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        // Adăugăm și email-ul în lista de claims, deoarece subiectul va fi acum ID-ul
         if (userDetails instanceof User) {
             extraClaims.put("email", ((User) userDetails).getEmail());
         }
 
         return Jwts.builder()
                 .setClaims(extraClaims)
-                // --- MODIFICARE CHEIE: Subiectul este acum ID-ul utilizatorului ---
                 .setSubject(String.valueOf(((User) userDetails).getId()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
@@ -95,15 +93,7 @@ public class JwtServiceImpl implements JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // în interiorul clasei JwtServiceImpl.java
-
-    /**
-     * Extrage claim-ul "name" din token.
-     * @param token Token-ul JWT.
-     * @return String Numele utilizatorului.
-     */
     public String extractName(String token) {
-        // Reutilizăm metoda generică 'extractClaim' pentru a extrage specific câmpul "name"
         return extractClaim(token, claims -> claims.get("name", String.class));
     }
 }

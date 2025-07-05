@@ -1,5 +1,4 @@
 package com.example.AuthenticationManagement.config;
-
 import com.example.AuthenticationManagement.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,13 +22,11 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // --- MODIFICAREA ESTE AICI ---
                         .requestMatchers("/api/users/login", "/api/users/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider);
-
         return http.build();
     }
 

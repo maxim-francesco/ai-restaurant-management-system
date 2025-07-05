@@ -19,16 +19,12 @@ public class EventController {
 
     private final EventService eventService;
 
-    // POST /api/v1/events?categoryId=1
-    // Acest endpoint este special: acceptă atât un fișier (poza), cât și date JSON (numele evenimentului).
-    // Se trimite ca 'multipart/form-data'.
     @PostMapping
     public ResponseEntity<EventDto> addEvent(
             @RequestParam("categoryId") Long categoryId,
-            @RequestParam("eventData") String eventDataJson, // Primim datele ca un string JSON
+            @RequestParam("eventData") String eventDataJson,
             @RequestParam("photo") MultipartFile photo) throws IOException {
 
-        // Folosim ObjectMapper pentru a converti string-ul JSON în obiectul nostru DTO
         ObjectMapper objectMapper = new ObjectMapper();
         CreateEventRequest request = objectMapper.readValue(eventDataJson, CreateEventRequest.class);
 
@@ -36,7 +32,6 @@ public class EventController {
         return new ResponseEntity<>(createdEvent, HttpStatus.CREATED);
     }
 
-    // DELETE /api/v1/events/{eventId}
     @DeleteMapping("/{eventId}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Long eventId) {
         eventService.deleteEvent(eventId);

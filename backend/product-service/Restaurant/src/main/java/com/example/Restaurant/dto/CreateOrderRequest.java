@@ -15,5 +15,5 @@ public class CreateOrderRequest {
 
     private String customerName;
     private String customerAddress;
-    private List<OrderItemRequestDTO> items; // List of items for the new order
+    private List<OrderItemRequestDTO> items;
 }

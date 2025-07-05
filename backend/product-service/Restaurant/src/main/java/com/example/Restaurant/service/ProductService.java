@@ -13,10 +13,7 @@ public interface ProductService {
     ProductDTO update(Long id, ProductDTO dto);
     void delete(Long id);
     boolean isIngredientUsed(Long ingredientId);
-
-    // ============== START MODIFICARE ==============
     ProductDTO uploadProductImage(Long productId, MultipartFile imageFile);
     void deleteProductImage(Long productId);
-    // =============== END MODIFICARE ===============
     List<ProductDetailDTO> findAllWithDetails();
 }

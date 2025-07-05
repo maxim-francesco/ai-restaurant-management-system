@@ -37,24 +37,18 @@ public class User implements UserDetails {
 
     private String password;
 
-
-    // --- NOU: Implementarea metodelor din UserDetails ---
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Returnăm rolul utilizatorului într-un format înțeles de Spring Security
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
     public String getUsername() {
-        // Pentru Spring Security, "username"-ul este identificatorul unic. În cazul nostru, acesta este email-ul.
         return email;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        // Pentru o implementare simplă, returnăm true.
         return true;
     }
 

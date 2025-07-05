@@ -75,7 +75,7 @@ public class UserController {
     public ResponseEntity<Map<String, String>> uploadProfileImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
         try {
             String fileName = userService.storeProfileImage(id, file);
-            String imageUrl = "http://localhost:8083/images/" + fileName; // Portul serviciului de auth
+            String imageUrl = "http://localhost:8083/images/" + fileName;
             Map<String, String> response = new HashMap<>();
             response.put("imageUrl", imageUrl);
             return ResponseEntity.ok(response);

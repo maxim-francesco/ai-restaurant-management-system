@@ -12,16 +12,16 @@ import com.example.Restaurant.repository.ProductRepository;
 import com.example.Restaurant.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile; // Import nou
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException; // Import nou
-import java.nio.file.Files; // Import nou
-import java.nio.file.Path; // Import nou
-import java.nio.file.Paths; // Import nou
-import java.nio.file.StandardCopyOption; // Import nou
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID; // Import nou
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,11 +32,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
     private final IngredientRepository ingredientRepository;
 
-    // ============== START MODIFICARE ==============
-    // Define the directory where images will be stored
-    // Define the directory where images will be stored
     private final String uploadDir = "/tmp/uploads/product-images/";
-    // =============== END MODIFICARE ===============
 
     @Override
     public List<ProductDTO> findAll() {
@@ -47,7 +43,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDetailDTO> findAllWithDetails() {
-        // Apelăm metoda optimizată din repository și mapper-ul pentru detalii
         return productRepository.findAllWithDetails().stream()
                 .map(ProductMapper::toDetailDTO)
                 .collect(Collectors.toList());
@@ -91,23 +86,21 @@ public class ProductServiceImpl implements ProductService {
         existing.setPrice(dto.getPrice());
         existing.setCategory(category);
         existing.setIngredients(ingredients);
-        existing.setImageUrl(dto.getImageUrl()); // Asigurăm că imageUrl este actualizat la update
+        existing.setImageUrl(dto.getImageUrl());
 
         return ProductMapper.toDTO(productRepository.save(existing));
     }
 
     @Override
     public void delete(Long id) {
-        Product product = productRepository.findById(id) // Preia produsul pentru a-i șterge imaginea
+        Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        // Delete the associated image file if it exists
         if (product.getImageUrl() != null && !product.getImageUrl().isEmpty()) {
             try {
                 Path imagePath = Paths.get(uploadDir).resolve(product.getImageUrl());
                 Files.deleteIfExists(imagePath);
             } catch (IOException e) {
-                // Log the error but don't prevent product deletion
                 System.err.println("Could not delete image file: " + product.getImageUrl() + " " + e.getMessage());
             }
         }
@@ -120,7 +113,6 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.existsByIngredients_Id(ingredientId);
     }
 
-    // ============== START MODIFICARE ==============
     @Override
     public ProductDTO uploadProductImage(Long productId, MultipartFile imageFile) {
         Product product = productRepository.findById(productId)
@@ -131,21 +123,17 @@ public class ProductServiceImpl implements ProductService {
         }
 
         try {
-            // Ensure the upload directory exists
             Path uploadPath = Paths.get(uploadDir);
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
 
-            // Generate a unique file name
             String fileName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
             Path filePath = uploadPath.resolve(fileName);
 
-            // Copy the file to the target location
             Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            // Update product's imageUrl
-            product.setImageUrl(fileName); // Store just the filename or relative path
+            product.setImageUrl(fileName);
             Product updatedProduct = productRepository.save(product);
 
             return ProductMapper.toDTO(updatedProduct);
@@ -164,14 +152,13 @@ public class ProductServiceImpl implements ProductService {
             try {
                 Path imagePath = Paths.get(uploadDir).resolve(product.getImageUrl());
                 Files.deleteIfExists(imagePath);
-                product.setImageUrl(null); // Clear the image URL from the product
+                product.setImageUrl(null);
                 productRepository.save(product);
             } catch (IOException e) {
                 throw new RuntimeException("Could not delete image file: " + product.getImageUrl(), e);
             }
         }
     }
-    // =============== END MODIFICARE ===============
 
 
 }

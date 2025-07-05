@@ -10,20 +10,16 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Această linie mapează cererile URL care încep cu /uploads/gallery/**
-        // la folderul fizic 'uploads/gallery/' de pe disc.
-        // "file:" este esențial pentru a indica o cale din sistemul de fișiere.
-        // CORECT - folosește o cale absolută, sigură pentru Railway
         registry.addResourceHandler("/uploads/gallery/**")
                 .addResourceLocations("file:/tmp/uploads/gallery/");
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**") // Aplică regula pentru toate endpoint-urile care încep cu /api/
-                .allowedOrigins("https://clientapp-seven.vercel.app/", "https://adminapp-g3ll.vercel.app") // Permite cereri DOAR de la această origine (aplicația ta Angular)
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Specifică metodele HTTP permise
-                .allowedHeaders("*") // Permite orice header-e în cerere (ex: Authorization)
-                .allowCredentials(true); // Permite trimiterea de cookies sau token-uri de autentificare
+        registry.addMapping("/api/**")
+                .allowedOrigins("https://clientapp-seven.vercel.app/", "https://adminapp-g3ll.vercel.app")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
 }

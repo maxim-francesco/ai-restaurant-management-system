@@ -6,20 +6,17 @@ import com.example.AuthenticationManagement.model.User;
 
 public class UserMapper {
 
-    // Din DTO de request -> în entitate
     public static User toEntity(UserRequestDTO dto) {
         return User.builder()
                 .name(dto.getName())
                 .email(dto.getEmail())
                 .phone(dto.getPhone())
-                .password(dto.getPassword()) // ✅ mapare corectă
+                .password(dto.getPassword())
                 .role(dto.getRole())
                 .profileImageUrl(dto.getProfileImageUrl())
                 .build();
     }
 
-
-    // Din entitate -> în DTO de răspuns
     public static UserResponseDTO toDto(User user) {
         if (user == null) return null;
 
@@ -33,7 +30,6 @@ public class UserMapper {
                 .build();
     }
 
-    // Update doar câmpuri specifice din DTO (opțional)
     public static void updateEntity(UserRequestDTO dto, User user) {
         if (dto.getName() != null) user.setName(dto.getName());
         if (dto.getEmail() != null) user.setEmail(dto.getEmail());

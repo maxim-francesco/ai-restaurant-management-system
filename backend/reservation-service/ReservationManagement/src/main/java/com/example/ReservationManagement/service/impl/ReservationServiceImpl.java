@@ -22,14 +22,14 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationResponseDTO createReservationFromUser(UserReservationRequestDTO dto) {
-        Reservation reservation = ReservationMapper.toEntity(dto); // PENDING
+        Reservation reservation = ReservationMapper.toEntity(dto);
         Reservation saved = reservationRepository.save(reservation);
         return ReservationMapper.toDto(saved);
     }
 
     @Override
     public ReservationResponseDTO createReservationFromAdmin(AdminReservationRequestDTO dto) {
-        Reservation reservation = ReservationMapper.toEntity(dto); // CONFIRMED sau ce vrea adminul
+        Reservation reservation = ReservationMapper.toEntity(dto);
         Reservation saved = reservationRepository.save(reservation);
         return ReservationMapper.toDto(saved);
     }

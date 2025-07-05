@@ -19,25 +19,25 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Numele nu poate fi gol.") // Valideaza ca nu e null si nu contine doar spatii
+    @NotBlank(message = "Numele nu poate fi gol.")
     @Column(nullable = false)
     private String name;
 
     @NotBlank(message = "Emailul nu poate fi gol.")
-    @Email(message = "Adresa de email nu este valida.") // Valideaza formatul emailului
-    @Column(nullable = false, unique = true) // Emailul trebuie sa fie unic in baza de date
+    @Email(message = "Adresa de email nu este valida.")
+    @Column(nullable = false, unique = true)
     private String email;
 
     @NotBlank(message = "Mesajul recenziei nu poate fi gol.")
-    @Column(nullable = false, length = 2000) // Setam o lungime maxima pentru mesaj
+    @Column(nullable = false, length = 2000)
     private String reviewMessage;
 
-    @Min(value = 0, message = "Rating-ul trebuie sa fie cel putin 0.")   // Valideaza valoarea minima
-    @Max(value = 10, message = "Rating-ul trebuie sa fie cel mult 10.") // Valideaza valoarea maxima
+    @Min(value = 0, message = "Rating-ul trebuie sa fie cel putin 0.")
+    @Max(value = 10, message = "Rating-ul trebuie sa fie cel mult 10.")
     @Column(nullable = false)
     private Integer rating;
 
-    @CreationTimestamp // Genereaza automat data si ora la crearea inregistrarii
+    @CreationTimestamp
     @Column(updatable = false, nullable = false)
     private LocalDateTime submissionDate;
 

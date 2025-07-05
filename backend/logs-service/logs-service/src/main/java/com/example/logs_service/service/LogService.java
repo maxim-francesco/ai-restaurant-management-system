@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service // Marcăm clasa ca fiind un Service, stratul pentru logica de business
+@Service
 public class LogService {
 
     private final LogEntryRepository logRepository;
@@ -23,10 +23,7 @@ public class LogService {
     }
 
     public List<LogResponseDTO> getLatestLogs() {
-        // 1. Preluăm entitățile din baza de date, sortate
         List<LogEntry> logs = logRepository.findAll(Sort.by(Sort.Direction.DESC, "timestamp"));
-
-        // 2. Folosim mapper-ul pentru a le converti într-o listă de DTO-uri
         return logMapper.toDtoList(logs);
     }
 }

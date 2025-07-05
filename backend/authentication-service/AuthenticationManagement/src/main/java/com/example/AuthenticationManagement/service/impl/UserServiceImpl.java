@@ -27,19 +27,14 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder; // NOU: Injectăm encoder-ul
-    private final Path rootLocation = Paths.get("/tmp/uploads"); // Cale absolută
+    private final PasswordEncoder passwordEncoder;
+    private final Path rootLocation = Paths.get("/tmp/uploads");
 
-    // NOU: Actualizăm constructorul pentru a primi și PasswordEncoder
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    /**
-     * Metoda cerută de UserDetailsService. Găsește un utilizator după email.
-     * Este folosită de Spring Security în procesul de autentificare.
-     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
@@ -56,9 +51,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = UserMapper.toEntity(dto);
-        // --- NOU ȘI CRUCIAL: Criptăm parola înainte de salvare ---
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-
         User savedUser = userRepository.save(user);
         return UserMapper.toDto(savedUser);
     }
@@ -91,9 +84,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id));
         UserMapper.updateEntity(dto, user);
-        // Nota: Aici ar trebui să decizi dacă permiti actualizarea parolei.
-        // Dacă da, ar trebui criptată și aici. De obicei, parolele se schimbă
-        // printr-un proces separat.
         User updated = userRepository.save(user);
         return UserMapper.toDto(updated);
     }

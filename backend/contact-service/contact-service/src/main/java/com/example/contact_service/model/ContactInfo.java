@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "contact_info") // Am actualizat și numele tabelului
+@Table(name = "contact_info")
 public class ContactInfo {
 
     @Id
@@ -23,11 +23,9 @@ public class ContactInfo {
     @Column(name = "email")
     private String email;
 
-    // Am înlocuit câmpurile multiple pentru program cu un singur câmp text
     @Column(name = "schedule", columnDefinition = "TEXT")
     private String schedule;
 
-    // Am adăugat câmpurile pentru social media
     @Column(name = "facebook_url")
     private String facebookUrl;
 

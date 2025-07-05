@@ -26,7 +26,7 @@ public class OrderItemMapper {
         return OrderItemDTO.builder()
                 .id(orderItem.getId())
                 .productId(orderItem.getProduct().getId())
-                .productName(orderItem.getProduct().getName()) // Include product name for display
+                .productName(orderItem.getProduct().getName())
                 .quantity(orderItem.getQuantity())
                 .priceAtOrder(orderItem.getPriceAtOrder())
                 .build();
@@ -41,8 +41,6 @@ public class OrderItemMapper {
                 .collect(Collectors.toList());
     }
 
-    // This method is crucial for converting a request DTO to an entity
-    // It requires fetching the actual Product entity
     public OrderItem toEntity(OrderItemRequestDTO orderItemRequestDTO) {
         if (orderItemRequestDTO == null) {
             return null;
@@ -51,13 +49,11 @@ public class OrderItemMapper {
         OrderItem orderItem = new OrderItem();
         orderItem.setQuantity(orderItemRequestDTO.getQuantity());
 
-        // Fetch the product to link it
-        // IMPORTANT: Handle potential ProductNotFoundException in the service layer
         Product product = productRepository.findById(orderItemRequestDTO.getProductId())
-                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + orderItemRequestDTO.getProductId())); // Consider a more specific exception
+                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + orderItemRequestDTO.getProductId()));
 
         orderItem.setProduct(product);
-        orderItem.setPriceAtOrder(product.getPrice()); // Set price at order from current product price
+        orderItem.setPriceAtOrder(product.getPrice());
 
         return orderItem;
     }

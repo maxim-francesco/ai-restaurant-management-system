@@ -21,10 +21,9 @@ public class LogEntry {
     @Column(nullable = false)
     private LocalDateTime timestamp;
 
-    // --- CÂMPURI NOI ---
     @Column(name = "log_type")
-    private String logType;       // Va stoca ex: "PRODUCT", "CATEGORY"
+    private String logType;
 
     @Column(name = "operation_type")
-    private String operationType; // Va stoca ex: "CREATE", "UPDATE", "DELETE"
+    private String operationType;
 }

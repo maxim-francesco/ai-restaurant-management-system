@@ -16,11 +16,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class IngredientController {
 
-    // Constante pentru RabbitMQ
     private static final String EXCHANGE_NAME = "logs_exchange";
     private static final String ROUTING_KEY_INGREDIENT = "log.ingredient.event";
 
-    // Dependințele necesare
     private final IngredientService ingredientService;
     private final RabbitTemplate rabbitTemplate;
     private final JwtService jwtService;
@@ -49,7 +47,6 @@ public class IngredientController {
                     createdIngredient.getName(),
                     createdIngredient.getId());
 
-            // MODIFICAT: Creăm și trimitem un obiect LogEvent
             LogEvent event = new LogEvent(logMessage, "INGREDIENT", "CREATE");
             rabbitTemplate.convertAndSend(EXCHANGE_NAME, ROUTING_KEY_INGREDIENT, event);
 
@@ -75,7 +72,6 @@ public class IngredientController {
                     updatedIngredient.getName(),
                     updatedIngredient.getId());
 
-            // MODIFICAT: Creăm și trimitem un obiect LogEvent
             LogEvent event = new LogEvent(logMessage, "INGREDIENT", "UPDATE");
             rabbitTemplate.convertAndSend(EXCHANGE_NAME, ROUTING_KEY_INGREDIENT, event);
 
@@ -99,8 +95,6 @@ public class IngredientController {
                     userName,
                     ingredientToDelete.getName(),
                     id);
-
-            // MODIFICAT: Creăm și trimitem un obiect LogEvent
             LogEvent event = new LogEvent(logMessage, "INGREDIENT", "DELETE");
             rabbitTemplate.convertAndSend(EXCHANGE_NAME, ROUTING_KEY_INGREDIENT, event);
 

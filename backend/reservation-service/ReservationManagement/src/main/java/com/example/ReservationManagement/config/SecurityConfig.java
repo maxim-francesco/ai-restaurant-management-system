@@ -27,15 +27,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // NOU: Aplicăm configurarea CORS definită mai jos
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Permite POST către /api/reservations/user fără autentificare
-                        .requestMatchers(HttpMethod.POST, "/api/reservations/user").permitAll() // LINIE NOUĂ
-                        // Toate celelalte rute sub /api/reservations/** necesită autentificare
+                        .requestMatchers(HttpMethod.POST, "/api/reservations/user").permitAll()
                         .requestMatchers("/api/reservations/**").authenticated()
-                        // Orice altă cerere este permisă (fără autentificare)
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -44,23 +40,14 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /**
-     * NOU: Acest Bean definește regulile CORS.
-     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Permitem request-uri de la originea aplicației Angular
         configuration.setAllowedOrigins(Arrays.asList("https://clientapp-seven.vercel.app/", "https://adminapp-g3ll.vercel.app"));
-        // Permitem metodele HTTP standard
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        // Permitem toate header-ele, inclusiv cel de Authorization
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        // Permitem trimiterea de cookies/credentials, dacă va fi cazul
         configuration.setAllowCredentials(true);
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // Aplicăm această configurație pentru toate căile (/**)
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }

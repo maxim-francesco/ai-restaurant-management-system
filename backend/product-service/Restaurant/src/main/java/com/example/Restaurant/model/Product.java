@@ -26,10 +26,8 @@ public class Product {
     @Column(nullable = false)
     private BigDecimal price;
 
-    // ============== START MODIFICARE ==============
     @Column(name = "image_url")
     private String imageUrl;
-    // =============== END MODIFICARE ===============
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")

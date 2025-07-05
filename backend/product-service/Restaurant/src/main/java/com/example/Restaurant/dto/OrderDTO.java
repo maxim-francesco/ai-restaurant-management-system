@@ -19,5 +19,5 @@ public class OrderDTO {
     private BigDecimal totalAmount;
     private String customerName;
     private String customerAddress;
-    private List<OrderItemDTO> orderItems; // List of order items for this order
+    private List<OrderItemDTO> orderItems;
 }

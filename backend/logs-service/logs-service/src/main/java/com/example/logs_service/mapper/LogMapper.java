@@ -23,7 +23,6 @@ public class LogMapper {
         dto.setMessage(logEntry.getMessage());
         dto.setTimestamp(logEntry.getTimestamp().format(FORMATTER));
 
-        // NOU: Mapăm noile câmpuri
         dto.setLogType(logEntry.getLogType());
         dto.setOperationType(logEntry.getOperationType());
 

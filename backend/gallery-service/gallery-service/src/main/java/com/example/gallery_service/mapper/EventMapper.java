@@ -8,11 +8,9 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface EventMapper {
-
     EventDto toDto(Event event);
-
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "photoUrl", ignore = true) // Photo URL îl vom seta în service
-    @Mapping(target = "category", ignore = true) // Categoria o vom seta în service
+    @Mapping(target = "photoUrl", ignore = true)
+    @Mapping(target = "category", ignore = true)
     Event toEntity(CreateEventRequest request);
 }

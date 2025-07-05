@@ -7,10 +7,10 @@ import com.example.Restaurant.service.JwtService;
 import com.example.Restaurant.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.http.MediaType; // Import nou
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile; // Import nou
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -104,7 +104,7 @@ public class ProductController {
             System.err.println("### Eroare la trimiterea log-ului de produs (delete): " + e.getMessage());
         }
 
-        productService.delete(id); // Acum ștergem produsul (și implicit imaginea dacă există)
+        productService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -113,7 +113,6 @@ public class ProductController {
         return productService.isIngredientUsed(id);
     }
 
-    // ============== START MODIFICARE ==============
     @PostMapping(value = "/{productId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProductDTO> uploadProductImage(@PathVariable Long productId,
                                                          @RequestPart("imageFile") MultipartFile imageFile,
@@ -140,7 +139,7 @@ public class ProductController {
     @DeleteMapping("/{productId}/image")
     public ResponseEntity<Void> deleteProductImage(@PathVariable Long productId,
                                                    @RequestHeader("Authorization") String authHeader) {
-        ProductDTO productToDeleteImageFor = productService.findById(productId); // Obține produsul pentru logare
+        ProductDTO productToDeleteImageFor = productService.findById(productId);
 
         productService.deleteProductImage(productId);
 
@@ -160,5 +159,4 @@ public class ProductController {
 
         return ResponseEntity.noContent().build();
     }
-    // =============== END MODIFICARE ===============
 }

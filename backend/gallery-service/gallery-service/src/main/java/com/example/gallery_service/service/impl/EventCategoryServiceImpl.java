@@ -13,13 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service // Marcăm implementarea ca fiind un serviciu Spring
+@Service
 @RequiredArgsConstructor
-public class EventCategoryServiceImpl implements EventCategoryService { // Implementăm interfața
+public class EventCategoryServiceImpl implements EventCategoryService {
 
     private final EventCategoryRepository categoryRepository;
     private final EventCategoryMapper categoryMapper;
-    // Dependența se face către interfață, nu implementare!
     private final EventService eventService;
 
     @Override // Adnotarea indică faptul că suprascriem o metodă din interfață

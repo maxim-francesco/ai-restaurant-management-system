@@ -29,7 +29,7 @@ public class OrderMapper {
                 .totalAmount(order.getTotalAmount())
                 .customerName(order.getCustomerName())
                 .customerAddress(order.getCustomerAddress())
-                .orderItems(orderItemMapper.toDtoList(order.getOrderItems())) // Map nested order items
+                .orderItems(orderItemMapper.toDtoList(order.getOrderItems()))
                 .build();
     }
 
@@ -42,9 +42,6 @@ public class OrderMapper {
                 .collect(Collectors.toList());
     }
 
-    // This method converts the request DTO to the Order entity
-    // It does NOT set the totalAmount or orderItems here, as those will be calculated
-    // and set in the service layer after fetching product details.
     public Order toEntity(CreateOrderRequest createOrderRequest) {
         if (createOrderRequest == null) {
             return null;
@@ -52,8 +49,7 @@ public class OrderMapper {
         return Order.builder()
                 .customerName(createOrderRequest.getCustomerName())
                 .customerAddress(createOrderRequest.getCustomerAddress())
-                .orderDate(LocalDateTime.now()) // Set current time as order date
-                // totalAmount and orderItems will be calculated and set by the service layer
+                .orderDate(LocalDateTime.now())
                 .build();
     }
 }

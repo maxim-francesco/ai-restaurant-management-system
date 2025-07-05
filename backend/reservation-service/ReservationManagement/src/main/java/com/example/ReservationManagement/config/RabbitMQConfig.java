@@ -7,12 +7,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
-
-    /**
-     * Definește un convertor de mesaje care va folosi JSON.
-     * Acest bean va fi folosit automat de RabbitTemplate pentru a serializa
-     * obiectele trimise către RabbitMQ.
-     */
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();

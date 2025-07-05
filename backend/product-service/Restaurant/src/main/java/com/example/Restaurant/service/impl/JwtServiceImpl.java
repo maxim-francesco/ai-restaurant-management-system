@@ -52,7 +52,6 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        // Adăugăm și email-ul în lista de claims, deoarece subiectul va fi acum ID-ul
         if (userDetails instanceof User) {
             extraClaims.put("email", ((User) userDetails).getEmail());
         }
@@ -96,7 +95,6 @@ public class JwtServiceImpl implements JwtService {
     }
 
     public String extractName(String token) {
-        // Reutilizăm metoda generică 'extractClaim' pentru a extrage specific câmpul "name"
         return extractClaim(token, claims -> claims.get("name", String.class));
     }
 }

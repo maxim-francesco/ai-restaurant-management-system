@@ -16,19 +16,14 @@ public class RabbitMQConfig {
 
     public static final String EXCHANGE_NAME = "logs_exchange";
     public static final String QUEUE_NAME = "logs_queue";
-
-    // ... Bean-urile tale existente (exchange, queue, bindings) rămân neschimbate ...
-
     @Bean
     DirectExchange exchange() {
         return new DirectExchange(EXCHANGE_NAME);
     }
-
     @Bean
     Queue queue() {
         return new Queue(QUEUE_NAME, true);
     }
-
     @Bean
     Binding productBinding(Queue queue, DirectExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with("log.product.event");
@@ -53,15 +48,6 @@ public class RabbitMQConfig {
     Binding orderBinding(Queue queue, DirectExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with("log.order.event");
     }
-
-
-    // --- NOU: Adăugăm acest @Bean pentru a folosi JSON în loc de serializarea standard ---
-    /**
-     * Definește un convertor de mesaje care va folosi JSON (prin librăria Jackson).
-     * Acest lucru înlocuiește serializarea standard Java, rezolvând problema de securitate
-     * și făcând mesajele mai interoperabile și mai ușor de depanat.
-     * @return O instanță a convertorului de mesaje JSON.
-     */
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();

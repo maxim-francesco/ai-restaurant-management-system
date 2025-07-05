@@ -8,10 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-
-    // Metoda nouă pentru a încărca produsele cu toate detaliile (eager loading)
     @Query("SELECT p FROM Product p JOIN FETCH p.category LEFT JOIN FETCH p.ingredients")
     List<Product> findAllWithDetails();
-
     boolean existsByIngredients_Id(Long ingredientId);
 }

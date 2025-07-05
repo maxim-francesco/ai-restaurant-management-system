@@ -16,11 +16,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryController {
 
-    // Constante pentru RabbitMQ
     private static final String EXCHANGE_NAME = "logs_exchange";
     private static final String ROUTING_KEY_CATEGORY = "log.category.event";
 
-    // Dependințele necesare
     private final CategoryService categoryService;
     private final RabbitTemplate rabbitTemplate;
     private final JwtService jwtService;
@@ -38,10 +36,8 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity<CategoryDTO> create(@RequestBody CategoryDTO dto,
                                               @RequestHeader("Authorization") String authHeader) {
-        // Logica de business
         CategoryDTO createdCategory = categoryService.create(dto);
 
-        // Logica de logging
         try {
             final String token = authHeader.substring(7);
             final String userName = jwtService.extractName(token);
@@ -51,7 +47,6 @@ public class CategoryController {
                     createdCategory.getName(),
                     createdCategory.getId());
 
-            // MODIFICAT: Creăm și trimitem un obiect LogEvent
             LogEvent event = new LogEvent(logMessage, "CATEGORY", "CREATE");
             rabbitTemplate.convertAndSend(EXCHANGE_NAME, ROUTING_KEY_CATEGORY, event);
 
@@ -66,10 +61,8 @@ public class CategoryController {
     public ResponseEntity<CategoryDTO> update(@PathVariable Long id,
                                               @RequestBody CategoryDTO dto,
                                               @RequestHeader("Authorization") String authHeader) {
-        // Logica de business
         CategoryDTO updatedCategory = categoryService.update(id, dto);
 
-        // Logica de logging
         try {
             final String token = authHeader.substring(7);
             final String userName = jwtService.extractName(token);
@@ -79,7 +72,6 @@ public class CategoryController {
                     updatedCategory.getName(),
                     updatedCategory.getId());
 
-            // MODIFICAT: Creăm și trimitem un obiect LogEvent
             LogEvent event = new LogEvent(logMessage, "CATEGORY", "UPDATE");
             rabbitTemplate.convertAndSend(EXCHANGE_NAME, ROUTING_KEY_CATEGORY, event);
 
@@ -93,7 +85,6 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id,
                                        @RequestHeader("Authorization") String authHeader) {
-        // Logăm înainte de a șterge pentru a avea acces la date
         try {
             CategoryDTO categoryToDelete = categoryService.findById(id);
 
@@ -105,7 +96,6 @@ public class CategoryController {
                     categoryToDelete.getName(),
                     id);
 
-            // MODIFICAT: Creăm și trimitem un obiect LogEvent
             LogEvent event = new LogEvent(logMessage, "CATEGORY", "DELETE");
             rabbitTemplate.convertAndSend(EXCHANGE_NAME, ROUTING_KEY_CATEGORY, event);
 
@@ -113,7 +103,6 @@ public class CategoryController {
             System.err.println("### Eroare la trimiterea log-ului de categorie (delete): " + e.getMessage());
         }
 
-        // Executăm logica de business
         categoryService.delete(id);
         return ResponseEntity.noContent().build();
     }

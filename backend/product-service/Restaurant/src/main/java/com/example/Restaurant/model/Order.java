@@ -25,10 +25,10 @@ public class Order {
     @Column(nullable = false)
     private BigDecimal totalAmount;
 
-    @Column(nullable = false) // Customer name is mandatory for an order
+    @Column(nullable = false)
     private String customerName;
 
-    @Column(nullable = false) // Customer address is mandatory for an order
+    @Column(nullable = false)
     private String customerAddress;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)

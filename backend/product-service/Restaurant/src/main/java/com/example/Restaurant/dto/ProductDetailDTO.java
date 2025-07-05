@@ -18,8 +18,6 @@ public class ProductDetailDTO {
     private String description;
     private BigDecimal price;
     private String imageUrl;
-
-    // Am înlocuit ID-urile cu obiectele DTO complete
     private CategoryDTO category;
     private Set<IngredientDTO> ingredients;
 }
