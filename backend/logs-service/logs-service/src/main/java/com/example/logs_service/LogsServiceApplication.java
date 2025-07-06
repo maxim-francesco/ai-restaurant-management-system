@@ -19,7 +19,7 @@ public class LogsServiceApplication {
 	public CorsFilter corsFilter() {
 		CorsConfiguration corsConfiguration = new CorsConfiguration();
 		corsConfiguration.setAllowCredentials(true);
-		corsConfiguration.setAllowedOrigins(Arrays.asList("https://clientapp-seven.vercel.app/", "https://adminapp-g3ll.vercel.app"));
+		corsConfiguration.setAllowedOrigins(Arrays.asList("https://clientapp-lx5b.vercel.app", "https://adminapp-g3ll.vercel.app"));
 		corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
 				"Accept", "Authorization", "Origin, Accept", "X-Requested-With",
 				"Access-Control-Request-Method", "Access-Control-Request-Headers"));
